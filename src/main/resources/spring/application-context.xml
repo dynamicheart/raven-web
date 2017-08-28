@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.springframework.org/schema/data/jpa"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/data/jpa
+    http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+    <!-- datasource -->
+    <beans:import resource="classpath:/spring/datasource-c3p0.xml"/>
+    <!-- DB, TX and properties -->
+    <beans:import resource="classpath:/spring/application-config.xml"/>
+    <!-- mongo configuration -->
+    <beans:import resource="classpath:/spring/mongo-config.xml"/>
+    <!-- redis configuration -->
+    <beans:import resource="classpath:/spring/redis-config.xml"/>
+
+
+</beans:beans>
