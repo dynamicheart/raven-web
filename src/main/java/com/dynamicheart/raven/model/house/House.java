@@ -36,6 +36,9 @@ public class House extends RavenEntity<String,House>{
     @Field("description")
     private String description;
 
+    @Field("publicity")
+    private Boolean publicity = false;
+
     @Field("tags")
     private Set<String> tags = new HashSet<>();
 
@@ -47,8 +50,8 @@ public class House extends RavenEntity<String,House>{
     @Field("updated_at")
     private Date lastModifiedDate;
 
-    @CreatedBy
-    private User founder;
+    @Field("founder_id")
+    private String founderId;
 
     public String getId() {
         return id;
@@ -106,6 +109,14 @@ public class House extends RavenEntity<String,House>{
         this.tags = tags;
     }
 
+    public Boolean getPublicity() {
+        return publicity;
+    }
+
+    public void setPublicity(Boolean publicity) {
+        this.publicity = publicity;
+    }
+
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -122,11 +133,16 @@ public class House extends RavenEntity<String,House>{
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public User getFounder() {
-        return founder;
+    public String getFounderId() {
+        return founderId;
     }
 
-    public void setFounder(User founder) {
-        this.founder = founder;
+    public void setFounderId(String founderId) {
+        this.founderId = founderId;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        return object instanceof House && super.equals(object);
     }
 }

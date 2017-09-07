@@ -102,4 +102,9 @@ public class User extends RavenEntity<String, User>{
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        return object instanceof User && super.equals(object);
+    }
 }

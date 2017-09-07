@@ -19,4 +19,9 @@ public class Mold extends RavenEntity<String, Mold> {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        return object instanceof Mold && super.equals(object);
+    }
 }

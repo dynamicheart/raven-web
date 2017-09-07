@@ -59,4 +59,9 @@ public class WhistleBlowing extends RavenEntity<String, WhistleBlowing> {
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        return object instanceof WhistleBlowing && super.equals(object);
+    }
 }
