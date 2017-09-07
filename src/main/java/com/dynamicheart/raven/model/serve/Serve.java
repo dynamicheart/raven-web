@@ -77,4 +77,9 @@ public class Serve extends RavenEntity<String, Serve>{
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        return object instanceof Serve && super.equals(object);
+    }
 }

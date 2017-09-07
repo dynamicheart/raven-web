@@ -24,13 +24,13 @@ public class RestTemplateLeanCloudService implements LeanCloudService {
     @Override
     public LeanCloudResponse push(LeanCloudPush push) {
         HttpEntity<LeanCloudPush> entity = new HttpEntity<>(push, getHttpHeaders());
-        return restTemplate.postForObject(String.format(Constants.LEAN_CLOUD_API_TEMPLATE, "/push"), entity, LeanCloudResponse.class);
+        return restTemplate.postForObject(String.format(Constants.LEAN_CLOUD_API_BASE_URL, "/push"), entity, LeanCloudResponse.class);
     }
 
     @Override
     public LeanCloudResponse saveInstallation(LeanCloudInstallation installation) {
         HttpEntity<LeanCloudInstallation> entity = new HttpEntity<>(installation, getHttpHeaders());
-        return restTemplate.postForObject(String.format(Constants.LEAN_CLOUD_API_TEMPLATE, "/installations"), entity, LeanCloudResponse.class);
+        return restTemplate.postForObject(String.format(Constants.LEAN_CLOUD_API_BASE_URL, "/installations"), entity, LeanCloudResponse.class);
     }
 
     private HttpHeaders getHttpHeaders() {

@@ -56,4 +56,9 @@ public class Reply extends RavenEntity<String, Reply>{
     public void setPolls(List<Poll> polls) {
         this.polls = polls;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        return object instanceof Reply && super.equals(object);
+    }
 }
