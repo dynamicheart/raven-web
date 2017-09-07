@@ -4,15 +4,11 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <beans:bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig"/>
-
+    <!-- Jedis ConnectionFactory -->
     <beans:bean id="jedisConnectionFactory"
                 class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:use-pool="true"/>
 
-    <beans:bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+    <beans:bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
                 p:connectionFactory-ref="jedisConnectionFactory"/>
-    
-    <beans:bean id="tokenManager" class="com.dynamicheart.raven.authorization.manager.redis.RedisTokenManager">
-    </beans:bean>
 
 </beans:beans>

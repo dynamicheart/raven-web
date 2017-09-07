@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns="http://www.springframework.org/schema/data/jpa"
              xmlns:mongo="http://www.springframework.org/schema/data/mongo"
              xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd
-    http://www.springframework.org/schema/data/jpa
-    http://www.springframework.org/schema/data/jpa/spring-jpa.xsd http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
+    http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
 
     <mongo:mongo host="${mongo.host}" port="${mongo.port}"/>
     <mongo:db-factory id="mongoDbFactory" dbname="${mongo.dbname}" mongo-ref="mongo"/>
@@ -16,5 +14,5 @@
         <beans:constructor-arg ref="mappingMongoConverter"/>
     </beans:bean>
 
-    <mongo:repositories base-package="com.dynamicheart.raven.repositories.raven" mongo-template-ref="mongoTemplate"/>
+    <mongo:repositories base-package="com.dynamicheart.raven.repositories" mongo-template-ref="mongoTemplate"/>
 </beans:beans>

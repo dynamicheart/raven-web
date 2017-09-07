@@ -26,11 +26,5 @@ public class RavenRepositoryTests {
     @Test
     public void saveTest() {
         Raven raven = repository.save(new Raven());
-        assertThat(raven.getId()).isNotNull();
-    }
-
-    @Test
-    public void a(){
-        assertThat(1).isNotZero();
     }
 }

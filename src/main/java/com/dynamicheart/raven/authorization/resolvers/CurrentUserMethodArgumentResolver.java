@@ -1,7 +1,7 @@
 package com.dynamicheart.raven.authorization.resolvers;
 
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
-import com.dynamicheart.raven.constants.Constants;
+import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.repositories.user.UserRepository;
 import org.springframework.core.MethodParameter;
@@ -30,8 +30,10 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        Long currentUserId = (Long) webRequest.getAttribute(Constants.CURRENT_USER_ID, RequestAttributes.SCOPE_REQUEST);
+        //get user id that stored at token checking
+        String currentUserId = (String) webRequest.getAttribute(Constants.CURRENT_USER_ID, RequestAttributes.SCOPE_REQUEST);
         if (currentUserId != null){
+            // find user from database and return it
             return userRepository.findOne(currentUserId);
         }
         throw new MissingServletRequestPartException(Constants.CURRENT_USER_ID);

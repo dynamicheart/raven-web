@@ -2,32 +2,11 @@
 <!-- Spring Schema -->
 <beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns="http://www.springframework.org/schema/data/jpa"
-             xmlns:util="http://www.springframework.org/schema/util"
-             xmlns:context="http://www.springframework.org/schema/context"
-             xmlns:aop="http://www.springframework.org/schema/aop"
-             xmlns:tx="http://www.springframework.org/schema/tx"
              xsi:schemaLocation="http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans.xsd
-    http://www.springframework.org/schema/tx
-    http://www.springframework.org/schema/tx/spring-tx.xsd
-    http://www.springframework.org/schema/aop
-    http://www.springframework.org/schema/aop/spring-aop.xsd
-    http://www.springframework.org/schema/util
-    http://www.springframework.org/schema/util/spring-util.xsd
-    http://www.springframework.org/schema/context
-    http://www.springframework.org/schema/context/spring-context.xsd
-    http://www.springframework.org/schema/data/jpa
-    http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!-- import other spring contexts -->
-    <beans:import resource="datasource-c3p0.xml"/>
-
-    <!-- enable annotation config -->
-    <context:annotation-config />
-
-    <!-- repositories -->
-    <repositories base-package="com.dynamicheart.raven.repositories"/>
+    <beans:bean class=
+                        "org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
 
     <!-- database properties files -->
     <beans:bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -39,57 +18,7 @@
         </beans:property>
     </beans:bean>
 
-    <beans:bean id="entityManagerFactory" name="bookstoreContainer" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-
-        <beans:property name="dataSource" ref="datasource" />
-        <beans:property name="packagesToScan" value="com.dynamicheart.raven.model" />
-        <beans:property name="jpaVendorAdapter">
-            <beans:bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-                <beans:property name="showSql" value="true" />
-                <beans:property name="generateDdl" value="false" />
-                <beans:property name="databasePlatform" value="${hibernate.dialect}" />
-            </beans:bean>
-        </beans:property>
-        <beans:property name="jpaProperties">
-            <util:map>
-                <beans:entry key="hibernate.default_schema" value="${db.schema}" />
-                <beans:entry key="hibernate.hbm2ddl.auto" value="${hibernate.hbm2ddl.auto}" />
-                <beans:entry key="hibernate.show_sql" value="true" />
-                <beans:entry key="hibernate.cache.provider_class" value="org.hibernate.cache.EhCacheProvider" />
-                <beans:entry key="hibernate.cache.use_second_level_cache" value="true" />
-            </util:map>
-        </beans:property>
-
-        <beans:property name="loadTimeWeaver">
-            <beans:bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
-        </beans:property>
+    <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <beans:constructor-arg name="strength" value="11"/>
     </beans:bean>
-
-    <!-- Configure the transaction manager bean -->
-    <beans:bean id="transactionManager"
-                class="org.springframework.orm.jpa.JpaTransactionManager">
-        <beans:property name="entityManagerFactory" ref="entityManagerFactory"/>
-    </beans:bean>
-
-    <!-- Enable annotation driven transaction management -->
-    <tx:annotation-driven/>
-
-    <aop:config>
-        <aop:pointcut id="txPointCutDef" expression="this(com.dynamicheart.raven.services.common.generic.TransactionalAspectAwareService)" />
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCutDef" />
-    </aop:config>
-
-    <tx:advice id="txAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="get*" read-only="true" />
-            <tx:method name="list*" read-only="true" />
-            <tx:method name="search*" read-only="true" />
-            <tx:method name="*" read-only="false" rollback-for="com.bookstore.core.business.util.exception.ServiceException" />
-        </tx:attributes>
-    </tx:advice>
-
-    <beans:bean id="persistenceExceptionTranslationPostProcessor"
-                class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
-
-
 </beans:beans>

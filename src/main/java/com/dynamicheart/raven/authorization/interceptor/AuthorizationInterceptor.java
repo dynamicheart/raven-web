@@ -3,7 +3,7 @@ package com.dynamicheart.raven.authorization.interceptor;
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.authorization.manager.TokenManger;
 import com.dynamicheart.raven.authorization.model.TokenModel;
-import com.dynamicheart.raven.constants.Constants;
+import com.dynamicheart.raven.constant.Constants;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -34,7 +34,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter{
         Method method = handlerMethod.getMethod();
 
         //get token from request header
-        String authorization = request.getHeader(Constants.AUTHORIZATION);
+        String authorization = request.getHeader(Constants.HEADER_TOKEN);
 
         //check token
         TokenModel model = tokenManger.getToken(authorization);
