@@ -2,8 +2,13 @@ package com.dynamicheart.raven.authorization.manager.redis;
 
 import com.dynamicheart.raven.authorization.manager.TokenManger;
 import com.dynamicheart.raven.authorization.model.TokenModel;
+import com.dynamicheart.raven.constant.Constants;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+
+import javax.inject.Inject;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by dynamicheart on 21/8/2017.
@@ -11,25 +16,38 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisTokenManager implements TokenManger {
 
-    private RedisTemplate<Long, String> redis;
+    @Inject
+    private RedisTemplate<String, String> redis;
 
     @Override
-    public TokenModel create(Long userId) {
-        return null;
+    public TokenModel createToken(String userId) {
+        String token = UUID.randomUUID().toString();
+        TokenModel model = new TokenModel(userId, token);
+        redis.boundValueOps(String.format(Constants.REDIS_USER_KEY_TEMPLATE, userId)).set(token, Constants.TOKEN_EXPIRES_HOURS, TimeUnit.HOURS);
+        return model;
     }
 
     @Override
     public boolean checkToken(TokenModel model) {
-        return false;
+        if(model == null) {
+            return false;
+        }
+        String token = redis.boundValueOps(model.getUserId()).get();
+        if (token == null || !token.equals(model.getToken())){
+            return false;
+        }
+        //if checking succeed, prolong the token exipire time
+        redis.boundValueOps(model.getUserId()).expire(Constants.TOKEN_EXPIRES_HOURS, TimeUnit.HOURS);
+        return true;
     }
 
     @Override
-    public TokenModel getToken(String authenticattion) {
-        return null;
+    public TokenModel getToken(String authentication) {
+        return TokenModel.parseBase64(authentication);
     }
 
     @Override
-    public void deleteToken(Long userID) {
-
+    public void deleteToken(String userId) {
+        redis.delete(userId);
     }
 }

@@ -7,11 +7,11 @@ import com.dynamicheart.raven.authorization.model.TokenModel;
  */
 public interface TokenManger {
 
-    TokenModel create(Long userId);
+    TokenModel createToken(String userId);
 
     boolean checkToken(TokenModel model);
 
-    TokenModel getToken(String authenticattion);
+    TokenModel getToken(String authentication);
 
-    void deleteToken(Long userID);
+    void deleteToken(String userId);
 }

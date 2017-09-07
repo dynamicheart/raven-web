@@ -1,90 +1,49 @@
 package com.dynamicheart.raven.model.user;
 
-import com.dynamicheart.raven.constants.Constants;
-import com.dynamicheart.raven.model.apply.Apply;
-import com.dynamicheart.raven.model.group.member.GroupMember;
-import com.dynamicheart.raven.model.common.audit.AuditListener;
-import com.dynamicheart.raven.model.common.audit.AuditSection;
-import com.dynamicheart.raven.model.common.audit.Auditable;
-import com.dynamicheart.raven.model.report.Report;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import com.dynamicheart.raven.constant.Constants;
+import com.dynamicheart.raven.model.generic.RavenEntity;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * Created by dynamicheart on 6/8/2017.
  */
-@Entity
-@EntityListeners(value = AuditListener.class)
-@Table(name = "USER", schema = Constants.RAVEN_SCHEMA)
-public class User implements Serializable, Auditable {
-
-    private static final long serialVersionUID = 2861850070967782259L;
-
+@Document
+public class User extends RavenEntity<String, User>{
     @Id
-    @Column(name = "USER_ID", unique = true, nullable = false)
-    @TableGenerator(name = "TABLE_GEN", table = "RN_SEQUENCER", pkColumnName = "SEQ_NAME", valueColumnName = "SEQ_COUNT", pkColumnValue = "USER_SEQ_NEXT_VAL")
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "TABLE_GEN")
-    private Long id;
+    private String id;
 
-    @NotEmpty
-    @Column(name = "USER_NAME", length = 100, unique = true)
+    @Indexed(unique = true)
+    @Field("username")
     private String username;
 
-    @NotEmpty
-    @Column(name = "USER_PASSWORD", length = 60)
+    @Field("password")
     private String password;
 
-    @NotEmpty
-    @Email
-    @Column(name = "USER_EMAIL", length = 96, nullable = false)
+    @Indexed(unique = true)
+    @Field("email")
     private String email;
 
-    @NotEmpty
-    @Column(name = "USER_PHONE_NUMBER")
+    @Indexed(unique = true)
+    @Field("phone_number")
     private String phoneNumber;
 
-    @Column(name = "IS_ADMIN")
-    private Boolean idAdmin = false;
+    @Field("status")
+    private Integer status = Constants.USER_STATUS_OK;
 
-    @Column(name = "USER_STATUS", length = 1, nullable = true)
-    @Enumerated(value = EnumType.STRING)
-    private UserStatus status = UserStatus.NORMAL;
+    @Field("admin")
+    private Boolean admin = false;
 
-    @Column(name = "USER_AVATAR")
+    @Field("avatar")
     private String avatar;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "user")
-    private Set<GroupMember> groups = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "applier")
-    private Set<Apply> applies = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "reporter")
-    private Set<Report> reports = new HashSet<>();
-
-    @Embedded
-    private AuditSection auditSection = new AuditSection();
-
-    @Override
-    public AuditSection getAuditSection() {
-        return auditSection;
-    }
-
-    @Override
-    public void setAuditSection(AuditSection audit) {
-        auditSection = audit;
-    }
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -120,20 +79,20 @@ public class User implements Serializable, Auditable {
         this.phoneNumber = phoneNumber;
     }
 
-    public Boolean getIdAdmin() {
-        return idAdmin;
-    }
-
-    public void setIdAdmin(Boolean idAdmin) {
-        this.idAdmin = idAdmin;
-    }
-
-    public UserStatus getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(UserStatus status) {
+    public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
     }
 
     public String getAvatar() {
@@ -142,21 +101,5 @@ public class User implements Serializable, Auditable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public Set<GroupMember> getGroups() {
-        return groups;
-    }
-
-    public void setGroups(Set<GroupMember> groups) {
-        this.groups = groups;
-    }
-
-    public Set<Apply> getApplies() {
-        return applies;
-    }
-
-    public void setApplies(Set<Apply> applies) {
-        this.applies = applies;
     }
 }
