@@ -1,7 +1,7 @@
 package com.dynamicheart.raven.authorization.interceptor;
 
 import com.dynamicheart.raven.authorization.annotation.Authorization;
-import com.dynamicheart.raven.authorization.manager.TokenManger;
+import com.dynamicheart.raven.authorization.manager.TokenManager;
 import com.dynamicheart.raven.authorization.model.TokenModel;
 import com.dynamicheart.raven.constant.Constants;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter{
 
     @Inject
-    private TokenManger tokenManger;
+    private TokenManager tokenManager;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -37,8 +37,8 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter{
         String authorization = request.getHeader(Constants.HEADER_TOKEN);
 
         //check token
-        TokenModel model = tokenManger.getToken(authorization);
-        if(tokenManger.checkToken(model)){
+        TokenModel model = tokenManager.getToken(authorization);
+        if(tokenManager.checkToken(model)){
             request.setAttribute(Constants.CURRENT_USER_ID, model.getUserId());
             return true;
         }

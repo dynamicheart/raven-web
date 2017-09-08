@@ -6,6 +6,8 @@ import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.utils.exception.ConversionException;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
+
 @Component
 public class UpdateUserFormPopulator extends AbstractDataPopulator<UpdateUserForm, User>{
     @Override
@@ -14,7 +16,7 @@ public class UpdateUserFormPopulator extends AbstractDataPopulator<UpdateUserFor
     }
 
     @Override
-    public User populate(UpdateUserForm updateUserForm, User user) throws ConversionException {
+    public User populate(@NotNull UpdateUserForm updateUserForm,@NotNull User user) throws ConversionException {
         if(updateUserForm.getUsername() != null){
             user.setUsername(updateUserForm.getUsername());
         }

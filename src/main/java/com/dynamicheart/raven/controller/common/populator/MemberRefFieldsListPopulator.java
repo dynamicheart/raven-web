@@ -32,6 +32,7 @@ public class MemberRefFieldsListPopulator extends AbstractDataPopulator<List<Mem
                         memberRefFields.setId(member.getUser().getId());
                         memberRefFields.setRole(member.getRole());
                         memberRefFields.setUsername(member.getUser().getUsername());
+                        memberRefFields.setAvatar(member.getUser().getAvatar());
                         memberRefFieldsList.add(memberRefFields);
                     }
                 });

@@ -11,5 +11,5 @@ public interface MemberRepository extends MongoRepository<Member, String> {
 
     List<Member> findByHouseId(String houseId);
 
-    List<Member> findByHouseIdAndUser(String houseId, User user);
+    Member findTopByHouseIdAndUser(String houseId, User user);
 }

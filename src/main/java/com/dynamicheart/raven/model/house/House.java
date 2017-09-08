@@ -2,7 +2,6 @@ package com.dynamicheart.raven.model.house;
 
 import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.model.generic.RavenEntity;
-import com.dynamicheart.raven.model.user.User;
 import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -50,6 +49,7 @@ public class House extends RavenEntity<String,House>{
     @Field("updated_at")
     private Date lastModifiedDate;
 
+    @Indexed
     @Field("founder_id")
     private String founderId;
 

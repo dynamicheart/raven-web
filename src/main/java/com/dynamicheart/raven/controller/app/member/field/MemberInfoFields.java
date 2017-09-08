@@ -1,6 +1,6 @@
-package com.dynamicheart.raven.controller.common.field;
+package com.dynamicheart.raven.controller.app.member.field;
 
-public class MemberRefFields {
+public class MemberInfoFields {
 
     private String id;
 

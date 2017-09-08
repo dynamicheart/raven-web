@@ -4,6 +4,8 @@ import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.repositories.user.UserRepository;
+import com.dynamicheart.raven.services.user.UserService;
+import com.dynamicheart.raven.utils.exception.ServiceException;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -20,7 +22,7 @@ import javax.inject.Inject;
 public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Inject
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -34,7 +36,11 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
         String currentUserId = (String) webRequest.getAttribute(Constants.CURRENT_USER_ID, RequestAttributes.SCOPE_REQUEST);
         if (currentUserId != null){
             // find user from database and return it
-            return userRepository.findOne(currentUserId);
+            User user = userService.getById(currentUserId);
+            if(user == null){
+                throw new ServiceException();
+            }
+            return user;
         }
         throw new MissingServletRequestPartException(Constants.CURRENT_USER_ID);
     }
