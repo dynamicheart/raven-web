@@ -65,7 +65,7 @@ public class MemberController {
     @RequestMapping(method = RequestMethod.POST)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 201, response = MemberInfoFields.class, message = "Add a member")
+            @ApiResponse(code = 200, response = MemberInfoFields.class, message = "Add a member")
     })
     public ResponseEntity<?> post(@PathVariable String houseId,
                            @RequestBody String userId,

@@ -64,7 +64,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ApiResponses({
-            @ApiResponse(code = 201, response = TokenModel.class, message = "Create a user")
+            @ApiResponse(code = 200, response = TokenModel.class, message = "Create a user")
     })
     public ResponseEntity<?> post(@RequestBody CreateUserForm createUserForm) throws Exception{
 
