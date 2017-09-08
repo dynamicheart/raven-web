@@ -1,6 +1,6 @@
 package com.dynamicheart.raven.authorization.interceptor;
 
-import com.dynamicheart.raven.authorization.annotation.Authorization;
+import com.dynamicheart.raven.authorization.annotation.AdminAuthorization;
 import com.dynamicheart.raven.authorization.manager.TokenManager;
 import com.dynamicheart.raven.authorization.model.TokenModel;
 import com.dynamicheart.raven.constant.Constants;
@@ -41,7 +41,7 @@ public class AdminAuthorizationInterceptor extends HandlerInterceptorAdapter{
         }
 
         //if checkToken fails and the method was annotated with Authorization return 401
-        if(method.getAnnotation(Authorization.class) != null){
+        if(method.getAnnotation(AdminAuthorization.class) != null){
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
