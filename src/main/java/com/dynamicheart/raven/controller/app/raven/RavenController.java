@@ -7,7 +7,7 @@ import com.dynamicheart.raven.controller.app.raven.field.CreateRavenForm;
 import com.dynamicheart.raven.controller.app.raven.field.RavenInfoFields;
 import com.dynamicheart.raven.controller.app.raven.populator.CreateRavenFormPopulator;
 import com.dynamicheart.raven.controller.app.raven.populator.RavenInfoFieldsPopulator;
-import com.dynamicheart.raven.controller.common.model.ErrorResponse;
+import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
 import com.dynamicheart.raven.model.raven.Raven;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.leancloud.service.LeanCloudService;
@@ -46,7 +46,7 @@ public class RavenController {
     })
     public ResponseEntity<?> getAll(@PathVariable String userId, @CurrentUser @ApiIgnore User currentUser)throws Exception{
         if (!currentUser.getId().equals(userId)) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         List<Raven> ravens = ravenService.findByAddresserId(userId);
@@ -68,16 +68,16 @@ public class RavenController {
                           @PathVariable String ravenId,
                           @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if (!currentUser.getId().equals(userId)) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         Raven raven = ravenService.getById(ravenId);
         if(raven == null){
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         if(!raven.getAddresserId().equals(userId)){
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         RavenInfoFields ravenInfoFields = ravenInfoFieldsPopulator.populate(raven);
@@ -94,7 +94,7 @@ public class RavenController {
                            @RequestParam CreateRavenForm createRavenForm,
                            @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if (!currentUser.getId().equals(userId)) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         Raven raven = createRavenFormPopulator.populate(createRavenForm);

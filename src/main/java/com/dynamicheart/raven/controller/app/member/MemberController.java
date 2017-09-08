@@ -6,7 +6,7 @@ import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.constant.Message;
 import com.dynamicheart.raven.controller.app.member.field.MemberInfoFields;
 import com.dynamicheart.raven.controller.app.member.populator.MemberInfoFieldsPopulator;
-import com.dynamicheart.raven.controller.common.model.ErrorResponse;
+import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
 import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.model.member.Member;
 import com.dynamicheart.raven.model.user.User;
@@ -48,13 +48,13 @@ public class MemberController {
                           @CurrentUser @ApiIgnore User currentUser) throws Exception {
         House house = houseService.getById(houseId);
         if (house == null) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         Member member = memberService.findTopByHouseAndUser(house, currentUser);
 
         if (!house.getPublicity() || member == null) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         MemberInfoFields memberInfoFields = memberInfoFieldsPopulator.populate(member);
@@ -73,22 +73,22 @@ public class MemberController {
 
         House house = houseService.getById(houseId);
         if (house == null) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         Member currentUserMember = memberService.findTopByHouseAndUser(house, currentUser);
         if (currentUserMember == null || !currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD)) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         if (memberService.findTopByHouseAndUser(house, currentUser) != null) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
 
         User user = userService.getById(userId);
         if (user == null) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         Member member = new Member();
@@ -114,16 +114,16 @@ public class MemberController {
         House house = houseService.getById(houseId);
         User user = userService.getById(userId);
         if(user == null || house == null){
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Message.MESSAGE_NOT_FOUND);
         }
 
         Member currentUserMember = memberService.findTopByHouseAndUser(house, currentUser);
         if (currentUserMember == null || !currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD)) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         if(userId.equals(currentUser.getId())){
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         Member member = memberService.findTopByHouseAndUser(house, user);
@@ -152,19 +152,19 @@ public class MemberController {
                              @CurrentUser @ApiIgnore User currentUser) throws Exception {
         House house = houseService.getById(houseId);
         if (house == null) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         Member currentUserMember = memberService.findTopByHouseAndUser(house, currentUser);
         Boolean isHouseLord = currentUserMember != null && currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD);
         Boolean isCurrentUser = userId.equals(currentUser.getId());
         if (!isHouseLord && !isCurrentUser) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         Member member = memberService.findTopByHouseAndUser(house, currentUser);
         if (member == null) {
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         memberService.delete(member);
