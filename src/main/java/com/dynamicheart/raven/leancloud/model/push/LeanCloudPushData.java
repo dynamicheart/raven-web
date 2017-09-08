@@ -1,4 +1,4 @@
-package com.dynamicheart.raven.model.leancloud.push;
+package com.dynamicheart.raven.leancloud.model.push;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -31,7 +31,7 @@ public class WhistleBlowingController {
     @ApiResponses({
             @ApiResponse(code = 201, response = WhistleBlowing.class, message = "Create a new whistleblowing")
     })
-    ResponseEntity<?> post(@CurrentUser @ApiIgnore User currentUser, @RequestBody String ravenId){
+    public ResponseEntity<?> post(@CurrentUser @ApiIgnore User currentUser, @RequestBody String ravenId){
         if(!ravenService.exists(ravenId)){
             return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
         }

@@ -9,7 +9,13 @@ import java.util.List;
 
 public interface MemberRepository extends MongoRepository<Member, String> {
 
-    List<Member> findByHouseId(String houseId);
+    List<Member> findByHouse(House house);
 
-    Member findTopByHouseIdAndUser(String houseId, User user);
+    List<Member> findByUser(User user);
+
+    Member findTopByHouseAndUser(House house, User user);
+
+    List<Member> deleteByHouse(House house);
+
+    List<Member> deleteByUser(User user);
 }

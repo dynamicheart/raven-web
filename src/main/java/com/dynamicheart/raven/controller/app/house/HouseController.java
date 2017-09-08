@@ -55,7 +55,7 @@ public class HouseController {
             return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
         }
 
-        if (!house.getPublicity() || memberService.findTopByHouseIdAndUser(house.getId(), currentUser) == null) {
+        if (!house.getPublicity() || memberService.findTopByHouseAndUser(house, currentUser) == null) {
             return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
         }
 
@@ -72,12 +72,6 @@ public class HouseController {
         House house = createHouseFormPopulator.populate(createHouseForm);
         house = houseService.create(house, currentUser);
 
-        Member member = new Member();
-        member.setHouseId(house.getId());
-        member.setUser(currentUser);
-        member.setRole(Constants.MEMBER_ROLE_LORD);
-        memberService.create(member);
-
         HouseInfoFields houseInfoFields = houseInfoFieldsPopulator.populate(house);
 
         return new ResponseEntity<>(houseInfoFields, HttpStatus.CREATED);
@@ -89,15 +83,14 @@ public class HouseController {
             @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Update house info")
     })
     public ResponseEntity<?> put(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser, @RequestBody UpdateHouseForm updateHouseForm) throws Exception {
-        Member currentUserMember = memberService.findTopByHouseIdAndUser(id, currentUser);
-        if(currentUserMember == null || !currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD)){
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
-        }
-
         House house = houseService.getById(id);
-
         if (house == null){
             return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.FORBIDDEN);
+        }
+
+        Member currentUserMember = memberService.findTopByHouseAndUser(house, currentUser);
+        if(currentUserMember == null || !currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD)){
+            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
         }
 
         house = updateHouseFormPopulator.populate(updateHouseForm, house);
@@ -114,15 +107,14 @@ public class HouseController {
             @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Update the house")
     })
     public ResponseEntity<?> delete(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception{
-        Member currentUserMember = memberService.findTopByHouseIdAndUser(id, currentUser);
-        if(currentUserMember == null || !currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD)){
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
-        }
-
         House house = houseService.getById(id);
-
         if (house == null){
             return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.FORBIDDEN);
+        }
+
+        Member currentUserMember = memberService.findTopByHouseAndUser(house, currentUser);
+        if(currentUserMember == null || !currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD)){
+            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
         }
 
         houseService.delete(house);

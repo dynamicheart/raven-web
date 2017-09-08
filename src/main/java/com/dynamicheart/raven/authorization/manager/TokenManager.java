@@ -14,4 +14,12 @@ public interface TokenManager {
     TokenModel getToken(String authentication);
 
     void deleteToken(String userId);
+
+    TokenModel createAdminToken(String userId);
+
+    boolean checkAdminToken(TokenModel model);
+
+    TokenModel getAdminToken(String authentication);
+
+    void deleteAdminToken(String userId);
 }

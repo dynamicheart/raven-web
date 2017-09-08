@@ -1,5 +1,6 @@
 package com.dynamicheart.raven.services.member;
 
+import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.model.member.Member;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.repositories.member.MemberRepository;
@@ -22,7 +23,17 @@ public class MemberServiceImpl extends RavenEntityServiceImpl<String, Member>
     }
 
     @Override
-    public Member findTopByHouseIdAndUser(String houseId, User user) {
-        return memberRepository.findTopByHouseIdAndUser(houseId, user);
+    public Member findTopByHouseAndUser(House house, User user) {
+        return memberRepository.findTopByHouseAndUser(house, user);
+    }
+
+    @Override
+    public List<Member> findByHouse(House house) {
+        return memberRepository.findByHouse(house);
+    }
+
+    @Override
+    public List<Member> findByUser(User user) {
+        return memberRepository.findByUser(user);
     }
 }

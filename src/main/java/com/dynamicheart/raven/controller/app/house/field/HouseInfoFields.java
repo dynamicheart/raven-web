@@ -19,6 +19,8 @@ public class HouseInfoFields {
 
     private Integer memberNumbers;
 
+    private String sigil;
+
     private String description;
 
     private Boolean publicity;
@@ -77,6 +79,14 @@ public class HouseInfoFields {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSigil() {
+        return sigil;
+    }
+
+    public void setSigil(String sigil) {
+        this.sigil = sigil;
     }
 
     public Boolean getPublicity() {

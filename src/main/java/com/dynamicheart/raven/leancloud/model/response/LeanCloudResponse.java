@@ -1,4 +1,4 @@
-package com.dynamicheart.raven.model.leancloud;
+package com.dynamicheart.raven.leancloud.model.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

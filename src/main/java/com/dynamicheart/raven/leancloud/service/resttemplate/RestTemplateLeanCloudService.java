@@ -1,10 +1,10 @@
-package com.dynamicheart.raven.services.leancloud.resttemplate;
+package com.dynamicheart.raven.leancloud.service.resttemplate;
 
 import com.dynamicheart.raven.constant.Constants;
-import com.dynamicheart.raven.model.leancloud.installation.LeanCloudInstallation;
-import com.dynamicheart.raven.model.leancloud.push.LeanCloudPush;
-import com.dynamicheart.raven.model.leancloud.LeanCloudResponse;
-import com.dynamicheart.raven.services.leancloud.LeanCloudService;
+import com.dynamicheart.raven.leancloud.model.installation.LeanCloudInstallation;
+import com.dynamicheart.raven.leancloud.model.push.LeanCloudPush;
+import com.dynamicheart.raven.leancloud.model.response.LeanCloudResponse;
+import com.dynamicheart.raven.leancloud.service.LeanCloudService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,7 +19,7 @@ public class RestTemplateLeanCloudService implements LeanCloudService {
     @Inject
     private RestTemplate restTemplate;
 
-    private HttpHeaders httpHeaders;
+    private static HttpHeaders httpHeaders;
 
     @Override
     public LeanCloudResponse push(LeanCloudPush push) {
@@ -28,12 +28,12 @@ public class RestTemplateLeanCloudService implements LeanCloudService {
     }
 
     @Override
-    public LeanCloudResponse saveInstallation(LeanCloudInstallation installation) {
+    public LeanCloudResponse saveInstallationInRemote(LeanCloudInstallation installation) {
         HttpEntity<LeanCloudInstallation> entity = new HttpEntity<>(installation, getHttpHeaders());
         return restTemplate.postForObject(String.format(Constants.LEAN_CLOUD_API_BASE_URL, "/installations"), entity, LeanCloudResponse.class);
     }
 
-    private HttpHeaders getHttpHeaders() {
+    private static HttpHeaders getHttpHeaders() {
         if (httpHeaders == null) {
             httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.APPLICATION_JSON);

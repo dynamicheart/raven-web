@@ -1,5 +1,6 @@
 package com.dynamicheart.raven.services.house;
 
+import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.model.member.Member;
 import com.dynamicheart.raven.model.user.User;
@@ -20,14 +21,29 @@ public class HouseServiceImpl extends RavenEntityServiceImpl<String, House>
     private MemberRepository memberRepository;
 
     @Inject
-    public HouseServiceImpl(HouseRepository houseRepository) {
+    public HouseServiceImpl(HouseRepository houseRepository, MemberRepository memberRepository) {
         super(houseRepository);
         this.houseRepository = houseRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Override
     public House create(House house, User founder) throws ServiceException{
         house.setFounderId(founder.getId());
-        return create(house);
+        House createdHouse = houseRepository.save(house);
+
+        Member member = new Member();
+        member.setHouse(createdHouse);
+        member.setUser(founder);
+        member.setRole(Constants.MEMBER_ROLE_LORD);
+        memberRepository.save(member);
+
+        return createdHouse;
+    }
+
+    @Override
+    public void delete(House house) throws ServiceException {
+        houseRepository.delete(house);
+        memberRepository.deleteByHouse(house);
     }
 }

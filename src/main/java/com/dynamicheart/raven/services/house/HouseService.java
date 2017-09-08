@@ -7,5 +7,5 @@ import com.dynamicheart.raven.utils.exception.ServiceException;
 
 public interface HouseService extends RavenEntityService<String, House> {
 
-    public House create(House house, User founder) throws ServiceException;
+    House create(House house, User founder) throws ServiceException;
 }
