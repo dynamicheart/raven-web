@@ -16,7 +16,6 @@ public class UserRefFieldsPopulator extends AbstractDataPopulator<User, UserRefF
         return new UserRefFields();
     }
 
-
     @Override
     public UserRefFields populate(@NotNull User user, @NotNull UserRefFields userRefFields) throws ConversionException {
         userRefFields.setId(user.getId());

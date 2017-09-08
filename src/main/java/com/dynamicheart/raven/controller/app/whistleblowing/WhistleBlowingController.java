@@ -3,7 +3,7 @@ package com.dynamicheart.raven.controller.app.whistleblowing;
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.constant.Message;
-import com.dynamicheart.raven.controller.common.model.ErrorResponse;
+import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.model.whistleblowing.WhistleBlowing;
 import com.dynamicheart.raven.services.raven.RavenService;
@@ -31,9 +31,9 @@ public class WhistleBlowingController {
     @ApiResponses({
             @ApiResponse(code = 201, response = WhistleBlowing.class, message = "Create a new whistleblowing")
     })
-    ResponseEntity<?> post(@CurrentUser @ApiIgnore User currentUser, @RequestBody String ravenId){
+    public ResponseEntity<?> post(@CurrentUser @ApiIgnore User currentUser, @RequestBody String ravenId){
         if(!ravenService.exists(ravenId)){
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_NOT_FOUND), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         WhistleBlowing whistleBlowing = new WhistleBlowing();

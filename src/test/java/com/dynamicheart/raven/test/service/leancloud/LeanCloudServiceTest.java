@@ -1,10 +1,10 @@
 package com.dynamicheart.raven.test.service.leancloud;
 
 import com.dynamicheart.raven.application.ApplicationConfiguration;
-import com.dynamicheart.raven.model.leancloud.LeanCloudResponse;
-import com.dynamicheart.raven.model.leancloud.push.LeanCloudPush;
-import com.dynamicheart.raven.model.leancloud.push.LeanCloudPushData;
-import com.dynamicheart.raven.services.leancloud.LeanCloudService;
+import com.dynamicheart.raven.leancloud.model.response.LeanCloudResponse;
+import com.dynamicheart.raven.leancloud.model.push.LeanCloudPush;
+import com.dynamicheart.raven.leancloud.model.push.LeanCloudPushData;
+import com.dynamicheart.raven.leancloud.service.LeanCloudService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.dynamicheart.raven.model.leancloud.installation;
+package com.dynamicheart.raven.leancloud.model.installation;
 
 import java.util.HashSet;
 import java.util.Set;

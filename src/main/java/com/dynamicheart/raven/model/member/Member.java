@@ -2,6 +2,7 @@ package com.dynamicheart.raven.model.member;
 
 import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.model.generic.RavenEntity;
+import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.model.user.User;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -23,8 +24,9 @@ public class Member extends RavenEntity<String, Member>{
     private String id;
 
     @Indexed
+    @DBRef
     @Field("house_id")
-    private String houseId;
+    private House house;
 
     @Indexed
     @DBRef
@@ -48,12 +50,12 @@ public class Member extends RavenEntity<String, Member>{
         this.id = id;
     }
 
-    public String getHouseId() {
-        return houseId;
+    public House getHouse() {
+        return house;
     }
 
-    public void setHouseId(String houseId) {
-        this.houseId = houseId;
+    public void setHouse(House house) {
+        this.house = house;
     }
 
     public User getUser() {
