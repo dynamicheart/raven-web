@@ -3,6 +3,7 @@ package com.dynamicheart.raven.controller.admin.token;
 import com.dynamicheart.raven.authorization.annotation.AdminAuthorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.authorization.manager.TokenManager;
+import com.dynamicheart.raven.authorization.model.AuthenticationModel;
 import com.dynamicheart.raven.authorization.model.TokenModel;
 import com.dynamicheart.raven.constant.Message;
 import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
@@ -37,7 +38,7 @@ public class AdminTokenController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ApiResponses({
-            @ApiResponse(code = 200, response = TokenModel.class, message = "Admin Login")
+            @ApiResponse(code = 200, response = AuthenticationModel.class, message = "Admin Login")
     })
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
         Assert.notNull(username, Message.MESSAGE_USERNAME_NOT_EMPTY);
@@ -52,7 +53,10 @@ public class AdminTokenController {
         }
 
         TokenModel token = tokenManager.createAdminToken(user.getId());
-        return new ResponseEntity<>(token, HttpStatus.OK);
+
+        AuthenticationModel auth = new AuthenticationModel(token.getUserId(),token.toBase64());
+
+        return new ResponseEntity<>(auth, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
