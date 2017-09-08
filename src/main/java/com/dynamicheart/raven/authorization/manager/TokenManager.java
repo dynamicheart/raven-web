@@ -15,6 +15,8 @@ public interface TokenManager {
 
     void deleteToken(String userId);
 
+    boolean isTokenAlive(String userId);
+
     TokenModel createAdminToken(String userId);
 
     boolean checkAdminToken(TokenModel model);

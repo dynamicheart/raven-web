@@ -6,4 +6,6 @@ public class Message {
 
     public static final String MESSAGE_USERNAME_NOT_EMPTY = "用户名不能为空";
     public static final String MESSAGE_PASSWORD_NOT_EMPTY = "密码不能为空";
+
+    public static final String MESSAGE_TEMPLATE_NEW_RAVEN = "%s的信鸦给您带来了一条新的通知";
 }

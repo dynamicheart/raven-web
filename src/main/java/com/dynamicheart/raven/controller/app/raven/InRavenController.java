@@ -5,7 +5,7 @@ import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.constant.Message;
 import com.dynamicheart.raven.controller.app.raven.field.InRavenInfoFields;
 import com.dynamicheart.raven.controller.app.raven.populator.InRavenInfoFieldsPopulator;
-import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
+import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
 import com.dynamicheart.raven.model.raven.Raven;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.services.raven.RavenService;
@@ -40,7 +40,7 @@ public class InRavenController {
                                     @RequestParam(required = false) Date dateAfter,
                                     @CurrentUser @ApiIgnore User currentUser) throws Exception {
         if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         List<Raven> ravens;
@@ -67,16 +67,16 @@ public class InRavenController {
                           @PathVariable String ravenId,
                           @CurrentUser @ApiIgnore User currentUser) throws Exception {
         if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         Raven raven = ravenService.getById(ravenId);
         if(raven == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         if(!raven.getAddresseeIds().contains(userId)){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         InRavenInfoFields inRavenInfoFields = inRavenInfoFieldsPopulator.populate(raven, currentUser);

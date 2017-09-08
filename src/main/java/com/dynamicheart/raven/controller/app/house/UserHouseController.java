@@ -5,7 +5,7 @@ import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.constant.Message;
 import com.dynamicheart.raven.controller.app.house.field.HouseInfoFields;
 import com.dynamicheart.raven.controller.app.house.populator.HouseInfoFieldsPopulator;
-import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
+import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
 import com.dynamicheart.raven.model.member.Member;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.services.house.HouseService;
@@ -44,7 +44,7 @@ public class UserHouseController {
     })
     public ResponseEntity<?> getAll(@PathVariable String userId, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if(!userId.equals(currentUser.getId())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         List<Member> members = memberService.findByUser(currentUser);

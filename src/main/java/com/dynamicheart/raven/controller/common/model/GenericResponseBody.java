@@ -1,9 +1,9 @@
 package com.dynamicheart.raven.controller.common.model;
 
-public class ErrorResponseBody {
+public class GenericResponseBody {
     private String message;
 
-    public ErrorResponseBody(String message) {
+    public GenericResponseBody(String message) {
         this.message = message;
     }
 

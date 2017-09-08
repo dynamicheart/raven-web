@@ -2,15 +2,20 @@ package com.dynamicheart.raven.controller.app.raven;
 
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
+import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.constant.Message;
 import com.dynamicheart.raven.controller.app.raven.field.CreateRavenForm;
 import com.dynamicheart.raven.controller.app.raven.field.RavenInfoFields;
 import com.dynamicheart.raven.controller.app.raven.populator.CreateRavenFormPopulator;
 import com.dynamicheart.raven.controller.app.raven.populator.RavenInfoFieldsPopulator;
-import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
+import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
+import com.dynamicheart.raven.model.house.House;
+import com.dynamicheart.raven.model.member.Member;
 import com.dynamicheart.raven.model.raven.Raven;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.leancloud.service.LeanCloudService;
+import com.dynamicheart.raven.services.house.HouseService;
+import com.dynamicheart.raven.services.member.MemberService;
 import com.dynamicheart.raven.services.raven.RavenService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -31,6 +36,12 @@ public class RavenController {
     private RavenService ravenService;
 
     @Inject
+    private MemberService memberService;
+
+    @Inject
+    private HouseService houseService;
+
+    @Inject
     private RavenInfoFieldsPopulator ravenInfoFieldsPopulator;
 
     @Inject
@@ -46,7 +57,7 @@ public class RavenController {
     })
     public ResponseEntity<?> getAll(@PathVariable String userId, @CurrentUser @ApiIgnore User currentUser)throws Exception{
         if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         List<Raven> ravens = ravenService.findByAddresserId(userId);
@@ -68,16 +79,16 @@ public class RavenController {
                           @PathVariable String ravenId,
                           @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         Raven raven = ravenService.getById(ravenId);
         if(raven == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         if(!raven.getAddresserId().equals(userId)){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         RavenInfoFields ravenInfoFields = ravenInfoFieldsPopulator.populate(raven);
@@ -94,11 +105,20 @@ public class RavenController {
                            @RequestParam CreateRavenForm createRavenForm,
                            @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         Raven raven = createRavenFormPopulator.populate(createRavenForm);
+        House house = houseService.getById(raven.getHouseId());
+        Member member = memberService.findTopByHouseAndUser(house, currentUser);
+        if(member == null || (!member.getRole().equals(Constants.MEMBER_ROLE_LORD) && !member.getRole().equals(Constants.MEMBER_ROLE_MAESTER))){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
+        }
 
-        return null;
+        leanCloudService.send(raven, currentUser);
+        raven = ravenService.save(raven);
+        RavenInfoFields ravenInfoFields = ravenInfoFieldsPopulator.populate(raven);
+
+        return new ResponseEntity<>(ravenInfoFields, HttpStatus.CREATED);
     }
 }
