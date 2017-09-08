@@ -11,7 +11,9 @@ import com.dynamicheart.raven.controller.app.user.field.UserInfoFields;
 import com.dynamicheart.raven.controller.app.user.populator.CreateUserFormPopulator;
 import com.dynamicheart.raven.controller.app.user.populator.UpdateUserFormPopulator;
 import com.dynamicheart.raven.controller.app.user.populator.UserInfoFieldsPopulator;
-import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
+import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
+import com.dynamicheart.raven.leancloud.manager.InstallationManager;
+import com.dynamicheart.raven.leancloud.model.installation.InstallationModel;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.services.user.UserService;
 import io.swagger.annotations.ApiResponse;
@@ -34,6 +36,9 @@ public class UserController {
     private TokenManager tokenManager;
 
     @Inject
+    private InstallationManager installationManager;
+
+    @Inject
     private UserInfoFieldsPopulator infoFieldsPopulator;
 
     @Inject
@@ -49,7 +54,7 @@ public class UserController {
     })
     public ResponseEntity<?> get(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if(!id.equals(currentUser.getId())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         UserInfoFields userInfoFields = infoFieldsPopulator.populate(currentUser);
@@ -59,7 +64,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ApiResponses({
-            @ApiResponse(code = 201, response = TokenModel.class, message = "Create a user")
+            @ApiResponse(code = 200, response = TokenModel.class, message = "Create a user")
     })
     public ResponseEntity<?> post(@RequestBody CreateUserForm createUserForm) throws Exception{
 
@@ -80,7 +85,7 @@ public class UserController {
     })
     public ResponseEntity<?> put(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser, @RequestBody UpdateUserForm updateUserForm) throws Exception{
         if(!id.equals(currentUser.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         currentUser = updateUserFormPopulator.populate(updateUserForm);
@@ -98,7 +103,7 @@ public class UserController {
     })
     public ResponseEntity<?> delete(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if(!id.equals(currentUser.getId())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         userService.delete(currentUser);
@@ -106,5 +111,21 @@ public class UserController {
         UserInfoFields userInfoFields = infoFieldsPopulator.populate(currentUser);
 
         return new ResponseEntity<>(userInfoFields, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}/installations", method = RequestMethod.POST)
+    @Authorization
+    @ApiResponses({
+            @ApiResponse(code = 200, response = InstallationModel.class, message = "Update installation id")
+    })
+    public ResponseEntity<?> postInstallationId(@PathVariable String id,
+                                                @RequestParam String installationId,
+                                                @CurrentUser @ApiIgnore User currentUser) throws Exception{
+        if(!id.equals(currentUser.getId())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
+        }
+
+        InstallationModel installation = installationManager.save(id, installationId);
+        return new ResponseEntity<>(installation, HttpStatus.OK);
     }
 }

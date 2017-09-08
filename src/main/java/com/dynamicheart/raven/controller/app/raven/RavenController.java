@@ -2,15 +2,20 @@ package com.dynamicheart.raven.controller.app.raven;
 
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
+import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.constant.Message;
 import com.dynamicheart.raven.controller.app.raven.field.CreateRavenForm;
 import com.dynamicheart.raven.controller.app.raven.field.RavenInfoFields;
 import com.dynamicheart.raven.controller.app.raven.populator.CreateRavenFormPopulator;
 import com.dynamicheart.raven.controller.app.raven.populator.RavenInfoFieldsPopulator;
-import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
+import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
+import com.dynamicheart.raven.model.house.House;
+import com.dynamicheart.raven.model.member.Member;
 import com.dynamicheart.raven.model.raven.Raven;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.leancloud.service.LeanCloudService;
+import com.dynamicheart.raven.services.house.HouseService;
+import com.dynamicheart.raven.services.member.MemberService;
 import com.dynamicheart.raven.services.raven.RavenService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -24,11 +29,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users/{userId}/ravens")
 public class RavenController {
 
     @Inject
     private RavenService ravenService;
+
+    @Inject
+    private MemberService memberService;
+
+    @Inject
+    private HouseService houseService;
 
     @Inject
     private RavenInfoFieldsPopulator ravenInfoFieldsPopulator;
@@ -39,14 +49,14 @@ public class RavenController {
     @Inject
     private LeanCloudService leanCloudService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/users/{userId}/ravens", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = RavenInfoFields.class,  responseContainer = "List", message = "Get all ravens")
     })
     public ResponseEntity<?> getAll(@PathVariable String userId, @CurrentUser @ApiIgnore User currentUser)throws Exception{
         if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         List<Raven> ravens = ravenService.findByAddresserId(userId);
@@ -59,25 +69,19 @@ public class RavenController {
         return new ResponseEntity<>(ravenInfoFieldsList,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{ravenId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/ravens/{ravenId}", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = RavenInfoFields.class, message = "Get one raven")
     })
-    ResponseEntity<?> get(@PathVariable String userId,
-                          @PathVariable String ravenId,
-                          @CurrentUser @ApiIgnore User currentUser) throws Exception{
-        if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
-
+    public ResponseEntity<?> get(@PathVariable String ravenId, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         Raven raven = ravenService.getById(ravenId);
         if(raven == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
-        if(!raven.getAddresserId().equals(userId)){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+        if(!raven.getAddresserId().equals(currentUser.getId())){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         RavenInfoFields ravenInfoFields = ravenInfoFieldsPopulator.populate(raven);
@@ -85,20 +89,23 @@ public class RavenController {
         return new ResponseEntity<>(ravenInfoFields, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/ravens", method = RequestMethod.POST)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 201, response = RavenInfoFields.class, message = "Create a new raven")
+            @ApiResponse(code = 200, response = RavenInfoFields.class, message = "Create a new raven")
     })
-    ResponseEntity<?> post(@PathVariable String userId,
-                           @RequestParam CreateRavenForm createRavenForm,
-                           @CurrentUser @ApiIgnore User currentUser) throws Exception{
-        if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+    public ResponseEntity<?> post(@RequestParam CreateRavenForm createRavenForm, @CurrentUser @ApiIgnore User currentUser) throws Exception{
+        Raven raven = createRavenFormPopulator.populate(createRavenForm);
+        House house = houseService.getById(raven.getHouseId());
+        Member member = memberService.findTopByHouseAndUser(house, currentUser);
+        if(member == null || (!member.getRole().equals(Constants.MEMBER_ROLE_LORD) && !member.getRole().equals(Constants.MEMBER_ROLE_MAESTER))){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
-        Raven raven = createRavenFormPopulator.populate(createRavenForm);
+        leanCloudService.send(raven, currentUser);
+        raven = ravenService.save(raven);
+        RavenInfoFields ravenInfoFields = ravenInfoFieldsPopulator.populate(raven);
 
-        return null;
+        return new ResponseEntity<>(ravenInfoFields, HttpStatus.CREATED);
     }
 }

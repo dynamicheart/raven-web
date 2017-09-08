@@ -1,7 +1,6 @@
 package com.dynamicheart.raven.controller.app.raven.populator;
 
 import com.dynamicheart.raven.controller.app.raven.field.InRavenInfoFields;
-import com.dynamicheart.raven.controller.common.AbstractDataPopulator;
 import com.dynamicheart.raven.controller.common.populator.HouseRefFieldsPopulator;
 import com.dynamicheart.raven.controller.common.populator.ReplyRefFieldsPopulator;
 import com.dynamicheart.raven.controller.common.populator.UserRefFieldsPopulator;

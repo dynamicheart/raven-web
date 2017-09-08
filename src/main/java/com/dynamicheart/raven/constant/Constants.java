@@ -31,6 +31,7 @@ public class Constants {
     // string templates
     public static final String REDIS_USER_KEY_TEMPLATE="user:%s:token";
     public static final String REDIS_ADMIN_KEY_TEMPLATE="admin:%s:token";
+    public static final String REDIS_INSTALLATION_KEY_TEMPLATE="user:%s:installation-id";
     public static final String AUTHORIZATION_TEMPLATE="%s-%s-%s";
 
     // a field that store current user id

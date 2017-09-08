@@ -52,6 +52,11 @@ public class RedisTokenManager implements TokenManager {
     }
 
     @Override
+    public boolean isTokenAlive(String userId) {
+        return redis.boundValueOps(String.format(Constants.REDIS_USER_KEY_TEMPLATE, userId)).get() != null;
+    }
+
+    @Override
     public TokenModel createAdminToken(String userId) {
         String token = UUID.randomUUID().toString();
         TokenModel model = new TokenModel(userId, token);
