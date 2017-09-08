@@ -32,18 +32,18 @@ public abstract class RavenEntityServiceImpl<K extends Serializable & Comparable
     }
 
     @Override
-    public void save(E entity) throws ServiceException {
-        repository.save(entity);
+    public E save(E entity) throws ServiceException {
+        return repository.save(entity);
     }
 
     @Override
-    public void create(E entity) throws ServiceException {
-        save(entity);
+    public E create(E entity) throws ServiceException {
+        return save(entity);
     }
 
     @Override
-    public void update(E entity) throws ServiceException {
-        save(entity);
+    public E update(E entity) throws ServiceException {
+        return save(entity);
     }
 
     @Override
@@ -59,5 +59,10 @@ public abstract class RavenEntityServiceImpl<K extends Serializable & Comparable
     @Override
     public Long count() {
         return repository.count();
+    }
+
+    @Override
+    public Boolean exists(K id) {
+        return repository.exists(id);
     }
 }

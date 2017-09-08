@@ -16,7 +16,7 @@ public class UserInfoFieldsPopulator extends AbstractDataPopulator<User, UserInf
     }
 
     @Override
-    public UserInfoFields populate(@NotNull User user, UserInfoFields userInfoFields) throws ConversionException {
+    public UserInfoFields populate(@NotNull User user,@NotNull UserInfoFields userInfoFields) throws ConversionException {
         userInfoFields.setId(user.getId());
         userInfoFields.setUsername(user.getUsername());
         userInfoFields.setEmail(user.getEmail());

@@ -3,6 +3,7 @@ package com.dynamicheart.raven.model.reply;
 import com.dynamicheart.raven.model.reply.Poll.Poll;
 import com.dynamicheart.raven.model.generic.RavenEntity;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -16,6 +17,7 @@ public class Reply extends RavenEntity<String, Reply>{
     @Id
     public String id;
 
+    @Indexed
     @Field("raven_id")
     private String ravenId;
 

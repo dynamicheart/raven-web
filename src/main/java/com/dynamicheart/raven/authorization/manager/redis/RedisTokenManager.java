@@ -1,6 +1,6 @@
 package com.dynamicheart.raven.authorization.manager.redis;
 
-import com.dynamicheart.raven.authorization.manager.TokenManger;
+import com.dynamicheart.raven.authorization.manager.TokenManager;
 import com.dynamicheart.raven.authorization.model.TokenModel;
 import com.dynamicheart.raven.constant.Constants;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * Created by dynamicheart on 21/8/2017.
  */
 @Component
-public class RedisTokenManager implements TokenManger {
+public class RedisTokenManager implements TokenManager {
 
     @Inject
     private RedisTemplate<String, String> redis;
@@ -36,7 +36,7 @@ public class RedisTokenManager implements TokenManger {
         if (token == null || !token.equals(model.getToken())){
             return false;
         }
-        //if checking succeed, prolong the token exipire time
+        //if checking succeed, prolong the token expire time
         redis.boundValueOps(model.getUserId()).expire(Constants.TOKEN_EXPIRES_HOURS, TimeUnit.HOURS);
         return true;
     }

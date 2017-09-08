@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface RavenEntityService<K extends Serializable & Comparable<K>, E extends RavenEntity<K, ?>> {
 
-    void save(E entity) throws ServiceException;
+    E save(E entity) throws ServiceException;
 
-    void update(E entity) throws ServiceException;
+    E update(E entity) throws ServiceException;
 
-    void create(E entity) throws ServiceException;
+    E create(E entity) throws ServiceException;
 
     void delete(E entity) throws ServiceException;
 
@@ -21,4 +21,6 @@ public interface RavenEntityService<K extends Serializable & Comparable<K>, E ex
     List<E> list();
 
     Long count();
+
+    Boolean exists(K id);
 }

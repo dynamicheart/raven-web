@@ -3,6 +3,7 @@ package com.dynamicheart.raven.model.serve;
 import com.dynamicheart.raven.model.generic.RavenEntity;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -16,9 +17,11 @@ public class Serve extends RavenEntity<String, Serve>{
     @Id
     private String id;
 
+    @Indexed
     @Field("house_id")
     private String houseId;
 
+    @Indexed
     @Field("man_id")
     private String manId;
 

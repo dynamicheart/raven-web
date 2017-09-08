@@ -5,7 +5,7 @@ import com.dynamicheart.raven.authorization.model.TokenModel;
 /**
  * Created by dynamicheart on 21/8/2017.
  */
-public interface TokenManger {
+public interface TokenManager {
 
     TokenModel createToken(String userId);
 
