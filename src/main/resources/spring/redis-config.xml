@@ -6,9 +6,9 @@
 
     <!-- Jedis ConnectionFactory -->
     <beans:bean id="jedisConnectionFactory"
-                class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:use-pool="true"/>
+                class="org.springframework.pushModelData.redis.connection.jedis.JedisConnectionFactory" p:use-pool="true"/>
 
-    <beans:bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
+    <beans:bean id="stringRedisTemplate" class="org.springframework.pushModelData.redis.core.StringRedisTemplate"
                 p:connectionFactory-ref="jedisConnectionFactory"/>
 
 </beans:beans>

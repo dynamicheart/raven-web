@@ -1,17 +1,25 @@
 package com.dynamicheart.raven.leancloud.service.resttemplate;
 
 import com.dynamicheart.raven.constant.Constants;
-import com.dynamicheart.raven.leancloud.model.installation.LeanCloudInstallation;
-import com.dynamicheart.raven.leancloud.model.push.LeanCloudPush;
-import com.dynamicheart.raven.leancloud.model.response.LeanCloudResponse;
+import com.dynamicheart.raven.constant.Message;
+import com.dynamicheart.raven.leancloud.manager.InstallationManager;
+import com.dynamicheart.raven.leancloud.model.installation.InstallationModel;
+import com.dynamicheart.raven.leancloud.model.push.PushModel;
+import com.dynamicheart.raven.leancloud.model.push.component.PushModelData;
 import com.dynamicheart.raven.leancloud.service.LeanCloudService;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import com.dynamicheart.raven.model.raven.Raven;
+import com.dynamicheart.raven.model.user.User;
+import com.dynamicheart.raven.utils.exception.ServiceException;
+import com.mongodb.DBObject;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.inject.Inject;
+import javax.xml.ws.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class RestTemplateLeanCloudService implements LeanCloudService {
@@ -19,18 +27,41 @@ public class RestTemplateLeanCloudService implements LeanCloudService {
     @Inject
     private RestTemplate restTemplate;
 
+    @Inject
+    private InstallationManager installationManager;
+
     private static HttpHeaders httpHeaders;
 
     @Override
-    public LeanCloudResponse push(LeanCloudPush push) {
-        HttpEntity<LeanCloudPush> entity = new HttpEntity<>(push, getHttpHeaders());
-        return restTemplate.postForObject(String.format(Constants.LEAN_CLOUD_API_BASE_URL, "/push"), entity, LeanCloudResponse.class);
-    }
+    public void send(Raven raven, User addresser) throws ServiceException {
 
-    @Override
-    public LeanCloudResponse saveInstallationInRemote(LeanCloudInstallation installation) {
-        HttpEntity<LeanCloudInstallation> entity = new HttpEntity<>(installation, getHttpHeaders());
-        return restTemplate.postForObject(String.format(Constants.LEAN_CLOUD_API_BASE_URL, "/installations"), entity, LeanCloudResponse.class);
+        List<String> installationIds = new ArrayList<>();
+        raven.getAddresseeIds().forEach(addresseeId -> {
+            InstallationModel installationModel = installationManager.get(addresseeId);
+            if(installationModel != null){
+                installationIds.add(installationModel.getInstallationId());
+            }
+        });
+        DBObject where = PushModel.genWhereQuery(installationIds);
+
+        PushModelData data = new PushModelData();
+        data.setAlert(String.format(Message.MESSAGE_TEMPLATE_NEW_RAVEN, addresser.getId()));
+        data.setTitle(raven.getTitle());
+
+        PushModel pushModel = new PushModel();
+        pushModel.setPushModelData(data);
+        pushModel.setWhere(where);
+
+        HttpEntity<PushModel> entity = new HttpEntity<>(pushModel, getHttpHeaders());
+        try {
+            ResponseEntity<byte[]> responseEntity = restTemplate.exchange(
+                    String.format(Constants.LEAN_CLOUD_API_BASE_URL, "/push"),
+                    HttpMethod.POST,
+                    entity,
+                    byte[].class);
+        } catch (RestClientException e) {
+            throw new ServiceException();
+        }
     }
 
     private static HttpHeaders getHttpHeaders() {

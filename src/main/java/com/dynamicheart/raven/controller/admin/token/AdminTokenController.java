@@ -5,7 +5,7 @@ import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.authorization.manager.TokenManager;
 import com.dynamicheart.raven.authorization.model.TokenModel;
 import com.dynamicheart.raven.constant.Message;
-import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
+import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.repositories.user.UserRepository;
 import io.swagger.annotations.ApiResponse;
@@ -48,7 +48,7 @@ public class AdminTokenController {
         }
 
         if(!user.isAdmin()){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         TokenModel token = tokenManager.createAdminToken(user.getId());

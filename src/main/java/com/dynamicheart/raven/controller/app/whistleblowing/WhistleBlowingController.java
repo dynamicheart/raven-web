@@ -3,7 +3,7 @@ package com.dynamicheart.raven.controller.app.whistleblowing;
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.constant.Message;
-import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
+import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.model.whistleblowing.WhistleBlowing;
 import com.dynamicheart.raven.services.raven.RavenService;
@@ -33,7 +33,7 @@ public class WhistleBlowingController {
     })
     public ResponseEntity<?> post(@CurrentUser @ApiIgnore User currentUser, @RequestBody String ravenId){
         if(!ravenService.exists(ravenId)){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         WhistleBlowing whistleBlowing = new WhistleBlowing();

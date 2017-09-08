@@ -1,11 +1,11 @@
-package com.dynamicheart.raven.leancloud.model.push;
+package com.dynamicheart.raven.leancloud.model.push.component;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
-public class LeanCloudPushData implements Serializable{
+public class PushModelData implements Serializable{
 
     private static final long serialVersionUID = 4989733451384168740L;
 

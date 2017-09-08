@@ -5,7 +5,7 @@ import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.authorization.manager.TokenManager;
 import com.dynamicheart.raven.authorization.model.TokenModel;
 import com.dynamicheart.raven.constant.Message;
-import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
+import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.repositories.user.UserRepository;
 import io.swagger.annotations.ApiResponse;
@@ -47,7 +47,7 @@ public class TokenController {
         Assert.notNull(password, Message.MESSAGE_PASSWORD_NOT_EMPTY);
         User user = userRepository.findUserByUsername(username);
         if (user == null || !encoder.matches(password, user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseBody(Message.MESSAGE_NOT_FOUND));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         TokenModel token = tokenManager.createToken(user.getId());
