@@ -99,7 +99,7 @@ public class RavenController {
     @RequestMapping(method = RequestMethod.POST)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 201, response = RavenInfoFields.class, message = "Create a new raven")
+            @ApiResponse(code = 200, response = RavenInfoFields.class, message = "Create a new raven")
     })
     ResponseEntity<?> post(@PathVariable String userId,
                            @RequestParam CreateRavenForm createRavenForm,

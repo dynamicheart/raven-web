@@ -66,7 +66,7 @@ public class HouseController {
     @RequestMapping(method = RequestMethod.POST)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 201, response = HouseInfoFields.class, message = "Create a new house")
+            @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Create a new house")
     })
     public ResponseEntity<?> post(@CurrentUser @ApiIgnore User currentUser, @RequestBody CreateHouseForm createHouseForm) throws Exception {
         House house = createHouseFormPopulator.populate(createHouseForm);

@@ -21,7 +21,7 @@ import java.util.List;
 public class Reply extends RavenEntity<String, Reply> {
 
     @Id
-    public String id;
+    private String id;
 
     @Indexed
     @Field("raven_id")
