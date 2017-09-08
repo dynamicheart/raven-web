@@ -1,6 +1,6 @@
 package com.dynamicheart.raven.controller.admin.token;
 
-import com.dynamicheart.raven.authorization.annotation.Authorization;
+import com.dynamicheart.raven.authorization.annotation.AdminAuthorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.authorization.manager.TokenManager;
 import com.dynamicheart.raven.authorization.model.TokenModel;
@@ -56,7 +56,7 @@ public class AdminTokenController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    @Authorization
+    @AdminAuthorization
     public ResponseEntity logout(@CurrentUser @ApiIgnore User user) {
         tokenManager.deleteAdminToken(user.getId());
         return new ResponseEntity(HttpStatus.OK);
