@@ -2,6 +2,7 @@ package com.dynamicheart.raven.authorization.model;
 
 import com.dynamicheart.raven.constant.Constants;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
@@ -51,6 +52,10 @@ public class TokenModel {
             return null;
         }
 
-        return new TokenModel(param[0], param[1]);
+        Base64.Decoder decoder = Base64.getDecoder();
+        String userId = new String(decoder.decode(param[0]), StandardCharsets.UTF_8);
+        String token = new String(decoder.decode(param[1]), StandardCharsets.UTF_8);
+
+        return new TokenModel(userId, token);
     }
 }

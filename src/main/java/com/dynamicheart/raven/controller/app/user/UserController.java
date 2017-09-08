@@ -64,7 +64,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ApiResponses({
-            @ApiResponse(code = 200, response = TokenModel.class, message = "Create a user")
+            @ApiResponse(code = 200, response = UserInfoFields.class, message = "Create a user")
     })
     public ResponseEntity<?> post(@RequestBody CreateUserForm createUserForm) throws Exception{
 
@@ -74,8 +74,9 @@ public class UserController {
 
         user = userService.create(user);
 
-        TokenModel token = tokenManager.createToken(user.getId());
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        UserInfoFields userInfoFields = infoFieldsPopulator.populate(user);
+
+        return new ResponseEntity<>(userInfoFields, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)

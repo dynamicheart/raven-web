@@ -32,7 +32,7 @@ public class Constants {
     public static final String REDIS_USER_KEY_TEMPLATE="user:%s:token";
     public static final String REDIS_ADMIN_KEY_TEMPLATE="admin:%s:token";
     public static final String REDIS_INSTALLATION_KEY_TEMPLATE="user:%s:installation-id";
-    public static final String AUTHORIZATION_TEMPLATE="%s-%s-%s";
+    public static final String AUTHORIZATION_TEMPLATE="%s-%s";
 
     // a field that store current user id
     public static final String CURRENT_USER_ID = "CURRENT_USER_ID";
@@ -40,7 +40,7 @@ public class Constants {
     public static final int TOKEN_EXPIRES_HOURS = 720;
 
     //Request header field
-    public static final String HEADER_TOKEN = "X-TOKEN";
+    public static final String HEADER_X_AUTH = "X-AUTH";
 
     //LeanCloud
     public static final String LEAN_CLOUD_API_BASE_URL = "https://api.leancloud.cn/1.1%s";

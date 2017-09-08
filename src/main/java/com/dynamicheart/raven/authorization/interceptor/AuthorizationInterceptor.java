@@ -34,7 +34,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter{
         Method method = handlerMethod.getMethod();
 
         //get token from request header
-        String authorization = request.getHeader(Constants.HEADER_TOKEN);
+        String authorization = request.getHeader(Constants.HEADER_X_AUTH);
 
         //check token
         TokenModel model = tokenManager.getToken(authorization);
