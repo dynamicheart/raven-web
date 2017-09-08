@@ -43,12 +43,6 @@ public class HouseServiceImpl extends RavenEntityServiceImpl<String, House>
     }
 
     @Override
-    public void delete(House house) throws ServiceException {
-        houseRepository.delete(house);
-        memberRepository.deleteByHouse(house);
-    }
-
-    @Override
     public List<House> getAll() {
         return houseRepository.findAll();
     }

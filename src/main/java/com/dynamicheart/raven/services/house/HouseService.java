@@ -16,5 +16,4 @@ public interface HouseService extends RavenEntityService<String, House> {
     List<House> getBySimilarName(String name);
 
     House getByName(String name);
-    public House create(House house, User founder) throws ServiceException;
 }

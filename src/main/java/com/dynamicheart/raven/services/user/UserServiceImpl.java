@@ -50,4 +50,9 @@ public class UserServiceImpl extends RavenEntityServiceImpl<String, User>
     public List<User> getBySimilarName(String username) {
         return userRepository.findUsersByUsernameLike(username);
     }
+
+    @Override
+    public User getByName(String username) {
+        return userRepository.findUserByUsername(username);
+    }
 }
