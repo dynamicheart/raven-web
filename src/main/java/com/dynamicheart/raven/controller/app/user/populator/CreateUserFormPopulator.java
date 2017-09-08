@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import javax.validation.constraints.NotNull;
 
 @Component
 public class CreateUserFormPopulator extends AbstractDataPopulator<CreateUserForm, User> {
@@ -21,7 +22,7 @@ public class CreateUserFormPopulator extends AbstractDataPopulator<CreateUserFor
     }
 
     @Override
-    public User populate(CreateUserForm createUserForm, User user) throws ConversionException {
+    public User populate(@NotNull CreateUserForm createUserForm, @NotNull User user) throws ConversionException {
         user.setUsername(createUserForm.getUsername());
         user.setPassword(passwordEncoder.encode(createUserForm.getPassword()));
         user.setEmail(createUserForm.getEmail());

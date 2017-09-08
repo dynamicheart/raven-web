@@ -2,10 +2,12 @@ package com.dynamicheart.raven.controller.app.token;
 
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
-import com.dynamicheart.raven.authorization.manager.TokenManger;
+import com.dynamicheart.raven.authorization.manager.TokenManager;
 import com.dynamicheart.raven.authorization.model.TokenModel;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.repositories.user.UserRepository;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.inject.Inject;
 
@@ -28,12 +31,15 @@ public class TokenController {
     private UserRepository userRepository;
 
     @Inject
-    private TokenManger tokenManager;
+    private TokenManager tokenManager;
 
     @Inject
     private PasswordEncoder encoder;
 
     @RequestMapping(method = RequestMethod.POST)
+    @ApiResponses({
+            @ApiResponse(code = 200, response = TokenModel.class, message = "Login")
+    })
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
         Assert.notNull(username, "username can not be empty");
         Assert.notNull(password, "password can not be empty");
@@ -43,12 +49,12 @@ public class TokenController {
         }
 
         TokenModel token = tokenManager.createToken(user.getId());
-        return new ResponseEntity<TokenModel>(token, HttpStatus.OK);
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
     @Authorization
-    public ResponseEntity logout(@CurrentUser User user) {
+    public ResponseEntity logout(@CurrentUser @ApiIgnore User user) {
         tokenManager.deleteToken(user.getId());
         return new ResponseEntity(HttpStatus.OK);
     }

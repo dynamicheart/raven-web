@@ -38,7 +38,7 @@ public class Constants {
     public static final String HEADER_TOKEN = "X-TOKEN";
 
     //LeanCloud
-    public static final String LEAN_CLOUD_API_TEMPLATE = "https://api.leancloud.cn/1.1%s";
+    public static final String LEAN_CLOUD_API_BASE_URL = "https://api.leancloud.cn/1.1%s";
     public static final String LEAN_CLOUD_RAVEN_APP_ID = "TFJOwzoaKwEFSMyIMIV4XPHY-gzGzoHsz";
     public static final String LEAN_CLOUD_RAVEN_APP_KEY = "InFOgxkqvOfz5Bl9YaXijdHd";
     public static final String LEAN_CLOUD_RAVEN_MASTER_KEY = "VpaIyTbOtE3qGvl8STU750ob";
