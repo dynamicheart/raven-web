@@ -2,16 +2,22 @@ package com.dynamicheart.raven.model.user;
 
 import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.model.generic.RavenEntity;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Date;
+
 
 /**
  * Created by dynamicheart on 6/8/2017.
  */
 @Document
-public class User extends RavenEntity<String, User>{
+public class User extends RavenEntity<String, User> implements Persistable{
     @Id
     private String id;
 
@@ -38,6 +44,37 @@ public class User extends RavenEntity<String, User>{
 
     @Field("avatar")
     private String avatar;
+
+    /*changes*/
+    @CreatedDate
+    @Field("create_time")
+    private Date createDate;
+
+    @LastModifiedDate
+    @Field("update_time")
+    private Date updateDate;
+
+    public Boolean getAdmin() {
+        return admin;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    /*end changes*/
 
     public String getId() {
         return id;

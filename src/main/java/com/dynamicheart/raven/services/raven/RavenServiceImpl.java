@@ -35,4 +35,14 @@ public class RavenServiceImpl extends RavenEntityServiceImpl<String, Raven>
     public List<Raven> findByAddresseeIdAndCreatedDateAfter(String addresseeId, Date date) {
         return ravenRepository.findByAddresseeIdAndCreatedDateAfter(addresseeId, date);
     }
+
+    @Override
+    public List<Raven> findBySimilarContent(String content) {
+        return ravenRepository.findByDescriptionLike(content);
+    }
+
+    @Override
+    public List<Raven> findByHouseId(String houseId) {
+        return ravenRepository.findByHouseId(houseId);
+    }
 }

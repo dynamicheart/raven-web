@@ -3,6 +3,7 @@ package com.dynamicheart.raven.model.house;
 import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.model.generic.RavenEntity;
 import org.springframework.data.annotation.*;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -15,7 +16,7 @@ import java.util.Set;
  * Created by dynamicheart on 6/8/2017.
  */
 @Document
-public class House extends RavenEntity<String,House>{
+public class House extends RavenEntity<String,House> implements Persistable{
     @Id
     private String id;
 

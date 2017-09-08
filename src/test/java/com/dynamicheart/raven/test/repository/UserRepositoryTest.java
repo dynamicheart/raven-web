@@ -1,6 +1,7 @@
 package com.dynamicheart.raven.test.repository;
 
 import com.dynamicheart.raven.application.ApplicationConfiguration;
+import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.repositories.user.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,9 @@ public class UserRepositoryTest {
 
     @Test
     public void Test() {
+        User user=new User();
+        user.setUsername("julius_chen");
+        userRepository.save(user);
         //System.out.println(userRepository.findUserByUsername("julius_chen"));
         System.out.println(userRepository.findAll());
     }

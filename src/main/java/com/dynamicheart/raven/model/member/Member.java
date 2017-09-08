@@ -6,6 +6,7 @@ import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.model.user.User;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -19,7 +20,7 @@ import java.util.Date;
 @CompoundIndexes({
         @CompoundIndex(name = "house_user_idx", def = "{'house_id':1, 'user_id':1}")
 })
-public class Member extends RavenEntity<String, Member>{
+public class Member extends RavenEntity<String, Member> implements Persistable{
     @Id
     private String id;
 

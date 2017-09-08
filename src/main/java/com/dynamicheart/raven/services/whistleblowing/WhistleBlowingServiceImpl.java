@@ -6,6 +6,7 @@ import com.dynamicheart.raven.services.generic.RavenEntityServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Service
 public class WhistleBlowingServiceImpl extends RavenEntityServiceImpl<String, WhistleBlowing>
@@ -17,5 +18,10 @@ public class WhistleBlowingServiceImpl extends RavenEntityServiceImpl<String, Wh
     public WhistleBlowingServiceImpl(WhistleBlowingRepository whistleBlowingRepository) {
         super(whistleBlowingRepository);
         this.whistleBlowingRepository = whistleBlowingRepository;
+    }
+
+    @Override
+    public List<WhistleBlowing> getAll() {
+        return whistleBlowingRepository.findAll();
     }
 }

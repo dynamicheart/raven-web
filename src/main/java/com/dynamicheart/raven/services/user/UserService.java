@@ -11,4 +11,6 @@ public interface UserService extends RavenEntityService<String, User>{
     List<User>getAll();
 
     List<User>getBySimilarName(String username);
+
+    User getByName(String username);
 }
