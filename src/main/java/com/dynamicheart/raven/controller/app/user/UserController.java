@@ -11,7 +11,7 @@ import com.dynamicheart.raven.controller.app.user.field.UserInfoFields;
 import com.dynamicheart.raven.controller.app.user.populator.CreateUserFormPopulator;
 import com.dynamicheart.raven.controller.app.user.populator.UpdateUserFormPopulator;
 import com.dynamicheart.raven.controller.app.user.populator.UserInfoFieldsPopulator;
-import com.dynamicheart.raven.controller.common.model.ErrorResponse;
+import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.services.user.UserService;
 import io.swagger.annotations.ApiResponse;
@@ -49,7 +49,7 @@ public class UserController {
     })
     public ResponseEntity<?> get(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if(!id.equals(currentUser.getId())){
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         UserInfoFields userInfoFields = infoFieldsPopulator.populate(currentUser);
@@ -79,8 +79,8 @@ public class UserController {
             @ApiResponse(code = 200, response = UserInfoFields.class, message = "Update user")
     })
     public ResponseEntity<?> put(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser, @RequestBody UpdateUserForm updateUserForm) throws Exception{
-        if(!id.equals(currentUser.getId())){
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
+        if(!id.equals(currentUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         currentUser = updateUserFormPopulator.populate(updateUserForm);
@@ -98,7 +98,7 @@ public class UserController {
     })
     public ResponseEntity<?> delete(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if(!id.equals(currentUser.getId())){
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         userService.delete(currentUser);

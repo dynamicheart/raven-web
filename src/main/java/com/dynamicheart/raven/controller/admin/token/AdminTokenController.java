@@ -5,7 +5,7 @@ import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.authorization.manager.TokenManager;
 import com.dynamicheart.raven.authorization.model.TokenModel;
 import com.dynamicheart.raven.constant.Message;
-import com.dynamicheart.raven.controller.common.model.ErrorResponse;
+import com.dynamicheart.raven.controller.common.model.ErrorResponseBody;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.repositories.user.UserRepository;
 import io.swagger.annotations.ApiResponse;
@@ -40,15 +40,15 @@ public class AdminTokenController {
             @ApiResponse(code = 200, response = TokenModel.class, message = "Admin Login")
     })
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
-        Assert.notNull(username, "username can not be empty");
-        Assert.notNull(password, "password can not be empty");
+        Assert.notNull(username, Message.MESSAGE_USERNAME_NOT_EMPTY);
+        Assert.notNull(password, Message.MESSAGE_PASSWORD_NOT_EMPTY);
         User user = userRepository.findUserByUsername(username);
         if (user == null || !encoder.matches(password, user.getPassword())) {
             return ResponseEntity.notFound().build();
         }
 
         if(!user.isAdmin()){
-            return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         TokenModel token = tokenManager.createAdminToken(user.getId());

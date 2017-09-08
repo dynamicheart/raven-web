@@ -1,10 +1,9 @@
 package com.dynamicheart.raven.controller.common.model;
 
-public class ErrorResponse {
-
+public class ErrorResponseBody {
     private String message;
 
-    public ErrorResponse(String message) {
+    public ErrorResponseBody(String message) {
         this.message = message;
     }
 
