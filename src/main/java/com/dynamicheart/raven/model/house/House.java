@@ -32,6 +32,9 @@ public class House extends RavenEntity<String,House>{
     @Field("member_numbers")
     private Integer memberNumbers = 0;
 
+    @Field("sigil")
+    private String sigil;
+
     @Field("description")
     private String description;
 
@@ -91,6 +94,14 @@ public class House extends RavenEntity<String,House>{
 
     public void setMemberNumbers(Integer memberNumbers) {
         this.memberNumbers = memberNumbers;
+    }
+
+    public String getSigil() {
+        return sigil;
+    }
+
+    public void setSigil(String sigil) {
+        this.sigil = sigil;
     }
 
     public String getDescription() {

@@ -47,7 +47,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, response = UserInfoFields.class, message = "Delete user")
     })
-    ResponseEntity<?> get(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception{
+    public ResponseEntity<?> get(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if(!id.equals(currentUser.getId())){
             return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
         }
@@ -61,7 +61,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 201, response = TokenModel.class, message = "Create a user")
     })
-    ResponseEntity<?> post(@RequestBody CreateUserForm createUserForm) throws Exception{
+    public ResponseEntity<?> post(@RequestBody CreateUserForm createUserForm) throws Exception{
 
         User user = createUserFormPopulator.populate(createUserForm);
 
@@ -78,7 +78,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, response = UserInfoFields.class, message = "Update user")
     })
-    ResponseEntity<?> put(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser, @RequestBody UpdateUserForm updateUserForm) throws Exception{
+    public ResponseEntity<?> put(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser, @RequestBody UpdateUserForm updateUserForm) throws Exception{
         if(!id.equals(currentUser.getId())){
             return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
         }
@@ -96,7 +96,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, response = UserInfoFields.class, message = "Delete user")
     })
-    ResponseEntity<?> delete(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception{
+    public ResponseEntity<?> delete(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if(!id.equals(currentUser.getId())){
             return new ResponseEntity<>(new ErrorResponse(Message.MESSAGE_FORBIDDEN), HttpStatus.FORBIDDEN);
         }

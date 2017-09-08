@@ -7,8 +7,11 @@ public class Constants {
     public static final Integer USER_STATUS_OK = 0;
     public static final Integer USER_STATUS_DISABLE = 1;
 
-    public static final Integer WHISTLEBLOWING_STATUS_HANDLING = 0;
-    public static final Integer WHISTLEBLOWING_STATUS_FINISHED = 1;
+    public static final Integer RAVEN_TYPE_ORDINARY = 0;
+    public static final Integer RAVEN_TYPE_POLLS = 1;
+
+    public static final Integer WHISTLE_BLOWING_STATUS_HANDLING = 0;
+    public static final Integer WHISTLE_BLOWING_STATUS_FINISHED = 1;
 
     public static final Integer HOUSE_STATUS_NORMAL = 0;
     public static final Integer HOUSE_STATUS_DISABLE = 1;
@@ -27,7 +30,8 @@ public class Constants {
 
     // string templates
     public static final String REDIS_USER_KEY_TEMPLATE="user:%s:token";
-    public static final String AUTHORIZATION_TEMPLATE="%s-%s";
+    public static final String REDIS_ADMIN_KEY_TEMPLATE="admin:%s:token";
+    public static final String AUTHORIZATION_TEMPLATE="%s-%s-%s";
 
     // a field that store current user id
     public static final String CURRENT_USER_ID = "CURRENT_USER_ID";

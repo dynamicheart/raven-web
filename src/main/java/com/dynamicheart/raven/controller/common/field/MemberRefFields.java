@@ -2,7 +2,7 @@ package com.dynamicheart.raven.controller.common.field;
 
 public class MemberRefFields {
 
-    private String id;
+    private String userId;
 
     private String username;
 
@@ -10,12 +10,12 @@ public class MemberRefFields {
 
     private String avatar;
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {

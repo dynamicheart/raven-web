@@ -1,15 +1,20 @@
 package com.dynamicheart.raven.controller.app.raven.field;
 
 import com.dynamicheart.raven.controller.common.field.HouseRefFields;
+import com.dynamicheart.raven.controller.common.field.ReplyRefFields;
+import com.dynamicheart.raven.controller.common.field.UserRefFields;
 import com.dynamicheart.raven.model.raven.optionpoll.OptionPoll;
 
 import java.util.Date;
 import java.util.List;
 
-public class RavenInfoFields {
+public class InRavenInfoFields {
+
     private String id;
 
     private HouseRefFields house;
+
+    private UserRefFields addresser;
 
     private String title;
 
@@ -21,9 +26,11 @@ public class RavenInfoFields {
 
     private String attachmentId;
 
+    private ReplyRefFields replyRefFields;
+
     private Boolean mold = false;
 
-    private String moldId;
+    private String moldContent;
 
     private Date createdDate;
 
@@ -41,6 +48,14 @@ public class RavenInfoFields {
 
     public void setHouse(HouseRefFields house) {
         this.house = house;
+    }
+
+    public UserRefFields getAddresser() {
+        return addresser;
+    }
+
+    public void setAddresser(UserRefFields addresser) {
+        this.addresser = addresser;
     }
 
     public String getTitle() {
@@ -83,6 +98,14 @@ public class RavenInfoFields {
         this.attachmentId = attachmentId;
     }
 
+    public ReplyRefFields getReplyRefFields() {
+        return replyRefFields;
+    }
+
+    public void setReplyRefFields(ReplyRefFields replyRefFields) {
+        this.replyRefFields = replyRefFields;
+    }
+
     public Boolean isMold() {
         return mold;
     }
@@ -91,12 +114,12 @@ public class RavenInfoFields {
         this.mold = mold;
     }
 
-    public String getMoldId() {
-        return moldId;
+    public String getMoldContent() {
+        return moldContent;
     }
 
-    public void setMoldId(String moldId) {
-        this.moldId = moldId;
+    public void setMoldContent(String moldContent) {
+        this.moldContent = moldContent;
     }
 
     public Date getCreatedDate() {

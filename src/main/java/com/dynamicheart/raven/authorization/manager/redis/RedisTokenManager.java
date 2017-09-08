@@ -32,12 +32,12 @@ public class RedisTokenManager implements TokenManager {
         if(model == null) {
             return false;
         }
-        String token = redis.boundValueOps(model.getUserId()).get();
+        String token = redis.boundValueOps(String.format(Constants.REDIS_USER_KEY_TEMPLATE, model.getUserId())).get();
         if (token == null || !token.equals(model.getToken())){
             return false;
         }
         //if checking succeed, prolong the token expire time
-        redis.boundValueOps(model.getUserId()).expire(Constants.TOKEN_EXPIRES_HOURS, TimeUnit.HOURS);
+        redis.boundValueOps(String.format(Constants.REDIS_USER_KEY_TEMPLATE, model.getUserId())).expire(Constants.TOKEN_EXPIRES_HOURS, TimeUnit.HOURS);
         return true;
     }
 
@@ -48,6 +48,38 @@ public class RedisTokenManager implements TokenManager {
 
     @Override
     public void deleteToken(String userId) {
-        redis.delete(userId);
+        redis.delete((String.format(Constants.REDIS_USER_KEY_TEMPLATE, userId)));
+    }
+
+    @Override
+    public TokenModel createAdminToken(String userId) {
+        String token = UUID.randomUUID().toString();
+        TokenModel model = new TokenModel(userId, token);
+        redis.boundValueOps(String.format(Constants.REDIS_ADMIN_KEY_TEMPLATE, userId)).set(token, Constants.TOKEN_EXPIRES_HOURS, TimeUnit.HOURS);
+        return model;
+    }
+
+    @Override
+    public boolean checkAdminToken(TokenModel model) {
+        if(model == null) {
+            return false;
+        }
+        String token = redis.boundValueOps(String.format(Constants.REDIS_ADMIN_KEY_TEMPLATE, model.getUserId())).get();
+        if (token == null || !token.equals(model.getToken())){
+            return false;
+        }
+        //if checking succeed, prolong the token expire time
+        redis.boundValueOps(String.format(Constants.REDIS_ADMIN_KEY_TEMPLATE, model.getUserId())).expire(Constants.TOKEN_EXPIRES_HOURS, TimeUnit.HOURS);
+        return true;
+    }
+
+    @Override
+    public TokenModel getAdminToken(String authentication) {
+        return TokenModel.parseBase64(authentication);
+    }
+
+    @Override
+    public void deleteAdminToken(String userId) {
+        redis.delete((String.format(Constants.REDIS_ADMIN_KEY_TEMPLATE, userId)));
     }
 }

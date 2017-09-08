@@ -2,11 +2,15 @@ package com.dynamicheart.raven.model.raven;
 
 import com.dynamicheart.raven.model.generic.RavenEntity;
 import com.dynamicheart.raven.model.raven.optionpoll.OptionPoll;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -21,10 +25,11 @@ public class Raven extends RavenEntity<String, Raven>{
     @Field("house_id")
     private String houseId;
 
+    @Indexed
     @Field("addresser_id")
     private String addresserId;
 
-    @Field("addressees_ids")
+    @Field("addressee_ids")
     private List<String> addresseeIds = new ArrayList<>();
 
     @Field("title")
@@ -41,6 +46,20 @@ public class Raven extends RavenEntity<String, Raven>{
 
     @Field("attachment_id")
     private String attachmentId;
+
+    @Field("mold")
+    private Boolean mold = false;
+
+    @Field("mold_id")
+    private String moldId;
+
+    @CreatedDate
+    @Field("created_date")
+    private Date createdDate;
+
+    @LastModifiedDate
+    @Field("updated_date")
+    private Date updatedDate;
 
     public String getId() {
         return id;
@@ -104,6 +123,46 @@ public class Raven extends RavenEntity<String, Raven>{
 
     public void setOptionPolls(List<OptionPoll> optionPolls) {
         this.optionPolls = optionPolls;
+    }
+
+    public String getAttachmentId() {
+        return attachmentId;
+    }
+
+    public void setAttachmentId(String attachmentId) {
+        this.attachmentId = attachmentId;
+    }
+
+    public Boolean isMold() {
+        return mold;
+    }
+
+    public void setMold(Boolean mold) {
+        this.mold = mold;
+    }
+
+    public String getMoldId() {
+        return moldId;
+    }
+
+    public void setMoldId(String moldId) {
+        this.moldId = moldId;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
     @Override

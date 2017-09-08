@@ -7,8 +7,8 @@ import com.dynamicheart.raven.controller.common.populator.UserRefFieldsPopulator
 import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.model.member.Member;
 import com.dynamicheart.raven.model.user.User;
-import com.dynamicheart.raven.repositories.member.MemberRepository;
-import com.dynamicheart.raven.repositories.user.UserRepository;
+import com.dynamicheart.raven.services.member.MemberService;
+import com.dynamicheart.raven.services.user.UserService;
 import com.dynamicheart.raven.utils.exception.ConversionException;
 import org.springframework.stereotype.Component;
 
@@ -26,10 +26,10 @@ public class HouseInfoFieldsPopulator extends AbstractDataPopulator<House, House
     private UserRefFieldsPopulator userRefFieldsPopulator;
 
     @Inject
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Inject
-    private MemberRepository memberRepository;
+    private MemberService memberService;
 
     @Override
     protected HouseInfoFields createTarget() {
@@ -48,12 +48,12 @@ public class HouseInfoFieldsPopulator extends AbstractDataPopulator<House, House
         houseInfoFields.setTags(house.getTags());
         houseInfoFields.setCreatedDate(house.getCreatedDate());
 
-        User founder = userRepository.findOne(house.getFounderId());
+        User founder = userService.getById(house.getFounderId());
         if(founder != null){
             houseInfoFields.setFounder(userRefFieldsPopulator.populate(founder));
         }
 
-        List<Member> members = memberRepository.findByHouseId(house.getId());
+        List<Member> members = memberService.findByHouse(house);
         houseInfoFields.setMembers(memberRefFieldsListPopulator.populate(members));
 
         return houseInfoFields;
