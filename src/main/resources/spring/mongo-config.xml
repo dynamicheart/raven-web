@@ -14,4 +14,5 @@
     </beans:bean>
 
     <mongo:repositories base-package="com.dynamicheart.raven.repositories" mongo-template-ref="mongoTemplate"/>
+    <mongo:mapping-converter id="mappingMongoConverter"/>
 </beans:beans>

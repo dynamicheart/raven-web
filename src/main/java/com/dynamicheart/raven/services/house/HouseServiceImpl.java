@@ -11,6 +11,7 @@ import com.dynamicheart.raven.utils.exception.ServiceException;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Service
 public class HouseServiceImpl extends RavenEntityServiceImpl<String, House>
@@ -39,6 +40,21 @@ public class HouseServiceImpl extends RavenEntityServiceImpl<String, House>
         memberRepository.save(member);
 
         return createdHouse;
+    }
+
+    @Override
+    public List<House> getAll() {
+        return houseRepository.findAll();
+    }
+
+    @Override
+    public List<House> getBySimilarName(String name) {
+        return houseRepository.findHousesByNameLike(name);
+    }
+
+    @Override
+    public House getByName(String name) {
+        return houseRepository.findHouseByName(name);
     }
 
     @Override
