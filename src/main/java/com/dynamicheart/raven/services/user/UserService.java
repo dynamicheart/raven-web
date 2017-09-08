@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface UserService extends RavenEntityService<String, User>{
     Boolean exists(List<String> userIds);
+
+    List<User>getAll();
+
+    List<User>getBySimilarName(String username);
 }
