@@ -23,6 +23,7 @@ public class UserInfoFieldsPopulator extends AbstractDataPopulator<User, UserInf
         userInfoFields.setPhoneNumber(user.getPhoneNumber());
         userInfoFields.setStatus(user.getStatus());
         userInfoFields.setAvatar(user.getAvatar());
+        userInfoFields.setCreatedDate(user.getCreatedDate());
         return userInfoFields;
     }
 }

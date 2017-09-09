@@ -2,10 +2,14 @@ package com.dynamicheart.raven.model.user;
 
 import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.model.generic.RavenEntity;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Date;
 
 /**
  * Created by dynamicheart on 6/8/2017.
@@ -38,6 +42,14 @@ public class User extends RavenEntity<String, User>{
 
     @Field("avatar")
     private String avatar;
+
+    @CreatedDate
+    @Field("created_date")
+    private Date createdDate;
+
+    @LastModifiedDate
+    @Field("updated_date")
+    private Date lastModifiedDate;
 
     public String getId() {
         return id;
@@ -101,6 +113,22 @@ public class User extends RavenEntity<String, User>{
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Date lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     @Override
