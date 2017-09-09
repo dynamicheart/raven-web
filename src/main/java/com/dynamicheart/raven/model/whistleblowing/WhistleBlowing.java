@@ -26,21 +26,17 @@ public class WhistleBlowing extends RavenEntity<String, WhistleBlowing> {
     @Field("raven_id")
     private String ravenId;
 
+    @Field("status")
+    private Integer status = Constants.WHISTLE_BLOWING_STATUS_HANDLING;
+
+    @Field("type")
+    private Integer type = Constants.WHISTLE_BLOWING_STATUS_HANDLING;
+
+    @Field("description")
+    private String description;
+
     @CreatedDate
     private Date createdDate;
-
-    /*changes*/
-    @Field("status")
-    private int status= Constants.WHISTLE_BLOWING_STATUS_HANDLING;
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-    /*end changes*/
 
     public String getId() {
         return id;
@@ -72,6 +68,30 @@ public class WhistleBlowing extends RavenEntity<String, WhistleBlowing> {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
