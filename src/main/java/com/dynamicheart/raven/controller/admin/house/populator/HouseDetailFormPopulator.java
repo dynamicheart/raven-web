@@ -6,6 +6,8 @@ import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.utils.exception.ConversionException;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
+
 @Component
 public class HouseDetailFormPopulator extends AbstractDataPopulator<House, HouseDetailForm> {
     @Override
@@ -26,6 +28,9 @@ public class HouseDetailFormPopulator extends AbstractDataPopulator<House, House
         houseDetailForm.setSigil(house.getSigil());
         houseDetailForm.setStatus(house.getStatus());
         houseDetailForm.setTags(house.getTags());
+        SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
+        houseDetailForm.setCreatedDateString(sdf.format(house.getCreatedDate()));
+        houseDetailForm.setUpdatedDateString(sdf.format(house.getLastModifiedDate()));
         return houseDetailForm;
     }
 
