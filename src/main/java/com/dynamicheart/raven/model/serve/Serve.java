@@ -29,7 +29,6 @@ public class Serve extends RavenEntity<String, Serve>{
     @Field("content")
     private String content;
 
-    /*changes*/
     @Field("status")
     private Integer status= Constants.SERVE_STATUS_HANDLING;
 
