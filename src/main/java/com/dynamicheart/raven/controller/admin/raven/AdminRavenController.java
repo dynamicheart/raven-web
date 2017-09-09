@@ -1,6 +1,8 @@
 package com.dynamicheart.raven.controller.admin.raven;
 
 import com.dynamicheart.raven.authorization.annotation.Authorization;
+import com.dynamicheart.raven.controller.admin.raven.field.RavenForm;
+import com.dynamicheart.raven.controller.admin.raven.populator.RavenFormPopulator;
 import com.dynamicheart.raven.controller.app.raven.populator.RavenInfoFieldsPopulator;
 import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.model.raven.Raven;
@@ -32,23 +34,24 @@ public class AdminRavenController {
     @Inject
     private HouseService houseService;
 
-    @RequestMapping(value = "searchByAddresser/{username}", method = RequestMethod.GET)
-    @Authorization
+    @Inject
+    private RavenFormPopulator ravenFormPopulator;
+
+    @RequestMapping(value = "searchByAddresser/{userId}", method = RequestMethod.GET)
     @ApiResponses({
-            @ApiResponse(code = 200, response = List.class, message = "Get ravens by sender USERNAME")
+            @ApiResponse(code = 200, response = List.class, message = "Get ravens by sender id")
     })
-    public ResponseEntity<?> searchByAddresser(@PathVariable String username)throws Exception{
-        User user=userService.getByName(username);
-        if(user==null)
+    public ResponseEntity<?> searchByAddresser(@PathVariable String userId)throws Exception{
+        if(!userService.exists(userId))
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
 
-        List<Raven> ravens = ravenService.findByAddresserId(user.getId());
+        List<Raven> ravens = ravenService.findByAddresserId(userId);
+        List<RavenForm> ravenFormList=ravenFormPopulator.populateList(ravens);
 
-        return new ResponseEntity<>(ravens,HttpStatus.OK);
+        return new ResponseEntity<>(ravenFormList,HttpStatus.OK);
     }
 
     @RequestMapping(value = "searchByDescription/{content}", method = RequestMethod.GET)
-    @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = List.class, message = "Get ravens by content")
     })
@@ -58,21 +61,48 @@ public class AdminRavenController {
         if(ravens.size()==0)
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
 
-        return new ResponseEntity<>(ravens,HttpStatus.OK);
+        List<RavenForm> ravenFormList=ravenFormPopulator.populateList(ravens);
+        return new ResponseEntity<>(ravenFormList,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "searchByHouse/{houseName}", method = RequestMethod.GET)
-    @Authorization
+    @RequestMapping(value = "searchByHouse/{houseId}", method = RequestMethod.GET)
     @ApiResponses({
-            @ApiResponse(code = 200, response = List.class, message = "Get ravens by GROUPNAME")
+            @ApiResponse(code = 200, response = List.class, message = "Get ravens by group id")
     })
-    public ResponseEntity<?> searchByHouse(@PathVariable String houseName)throws Exception{
-        House house=houseService.getByName(houseName);
-        if(house==null)
+    public ResponseEntity<?> searchByHouse(@PathVariable String houseId)throws Exception{
+        if(!houseService.exists(houseId))
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
 
-        List<Raven> ravens = ravenService.findByHouseId(house.getId());
+        List<Raven> ravens = ravenService.findByHouseId(houseId);
 
-        return new ResponseEntity<>(ravens,HttpStatus.OK);
+        List<RavenForm> ravenFormList=ravenFormPopulator.populateList(ravens);
+        return new ResponseEntity<>(ravenFormList,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "allRavens", method = RequestMethod.GET)
+    @ApiResponses({
+            @ApiResponse(code = 200, response = List.class, message = "Get ravens")
+    })
+    public ResponseEntity<?> allRavens()throws Exception{
+
+        List<Raven> ravens = ravenService.findAll();
+
+        List<RavenForm> ravenFormList=ravenFormPopulator.populateList(ravens);
+        return new ResponseEntity<>(ravenFormList,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "deleteRaven/{ravenId}", method = RequestMethod.DELETE)
+    @ApiResponses({
+            @ApiResponse(code = 200, response = RavenForm.class, message = "delete notification")
+    })
+    public ResponseEntity<?> deleteRaven(@PathVariable String ravenId)throws Exception{
+        if(!ravenService.exists(ravenId))
+            return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+
+        Raven raven=ravenService.findById(ravenId);
+        RavenForm ravenForm=ravenFormPopulator.populate(raven);
+        ravenService.delete(raven);
+
+        return new ResponseEntity<>(ravenForm,HttpStatus.OK);
     }
 }
