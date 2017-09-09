@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users/{userId}/inravens")
 public class InRavenController {
 
     @Inject
@@ -31,7 +30,7 @@ public class InRavenController {
     @Inject
     private InRavenInfoFieldsPopulator inRavenInfoFieldsPopulator;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/users/{userId}/inravens", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = InRavenInfoFields.class,  responseContainer = "List", message = "Get all inravens")
@@ -58,24 +57,18 @@ public class InRavenController {
         return new ResponseEntity<>(inRavenInfoFieldsList, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{ravenId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/inravens/{ravenId}", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = InRavenInfoFields.class, message = "Get one inraven")
     })
-    ResponseEntity<?> get(@PathVariable String userId,
-                          @PathVariable String ravenId,
-                          @CurrentUser @ApiIgnore User currentUser) throws Exception {
-        if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
-
+    public ResponseEntity<?> get(@PathVariable String ravenId, @CurrentUser @ApiIgnore User currentUser) throws Exception {
         Raven raven = ravenService.getById(ravenId);
         if(raven == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
-        if(!raven.getAddresseeIds().contains(userId)){
+        if(!raven.getAddresseeIds().contains(currentUser.getId())){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 

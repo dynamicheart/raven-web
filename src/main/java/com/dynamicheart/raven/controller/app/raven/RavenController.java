@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users/{userId}/ravens")
 public class RavenController {
 
     @Inject
@@ -50,7 +49,7 @@ public class RavenController {
     @Inject
     private LeanCloudService leanCloudService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/users/{userId}/ravens", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = RavenInfoFields.class,  responseContainer = "List", message = "Get all ravens")
@@ -70,24 +69,18 @@ public class RavenController {
         return new ResponseEntity<>(ravenInfoFieldsList,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{ravenId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/ravens/{ravenId}", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = RavenInfoFields.class, message = "Get one raven")
     })
-    ResponseEntity<?> get(@PathVariable String userId,
-                          @PathVariable String ravenId,
-                          @CurrentUser @ApiIgnore User currentUser) throws Exception{
-        if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
-
+    public ResponseEntity<?> get(@PathVariable String ravenId, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         Raven raven = ravenService.getById(ravenId);
         if(raven == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
-        if(!raven.getAddresserId().equals(userId)){
+        if(!raven.getAddresserId().equals(currentUser.getId())){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
@@ -101,13 +94,7 @@ public class RavenController {
     @ApiResponses({
             @ApiResponse(code = 200, response = RavenInfoFields.class, message = "Create a new raven")
     })
-    ResponseEntity<?> post(@PathVariable String userId,
-                           @RequestParam CreateRavenForm createRavenForm,
-                           @CurrentUser @ApiIgnore User currentUser) throws Exception{
-        if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
-
+    public ResponseEntity<?> post(@RequestParam CreateRavenForm createRavenForm, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         Raven raven = createRavenFormPopulator.populate(createRavenForm);
         House house = houseService.getById(raven.getHouseId());
         Member member = memberService.findTopByHouseAndUser(house, currentUser);

@@ -1,4 +1,4 @@
-package com.dynamicheart.raven.controller.app.user.field.admin;
+package com.dynamicheart.raven.controller.admin.user.field;
 
 import java.io.Serializable;
 
