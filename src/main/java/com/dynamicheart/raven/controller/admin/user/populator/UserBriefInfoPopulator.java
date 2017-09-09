@@ -1,6 +1,6 @@
-package com.dynamicheart.raven.controller.app.user.populator.admin;
+package com.dynamicheart.raven.controller.admin.user.populator;
 
-import com.dynamicheart.raven.controller.app.user.field.admin.UserBriefInfo;
+import com.dynamicheart.raven.controller.admin.user.field.UserBriefInfo;
 import com.dynamicheart.raven.controller.common.AbstractDataPopulator;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.utils.exception.ConversionException;

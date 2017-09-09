@@ -1,11 +1,11 @@
-package com.dynamicheart.raven.controller.app.user;
+package com.dynamicheart.raven.controller.admin.user;
 
 import com.dynamicheart.raven.authorization.manager.TokenManager;
 import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.controller.app.user.field.UserInfoFields;
-import com.dynamicheart.raven.controller.app.user.field.admin.UserBriefInfo;
+import com.dynamicheart.raven.controller.admin.user.field.UserBriefInfo;
 import com.dynamicheart.raven.controller.app.user.populator.UserInfoFieldsPopulator;
-import com.dynamicheart.raven.controller.app.user.populator.admin.UserBriefInfoPopulator;
+import com.dynamicheart.raven.controller.admin.user.populator.UserBriefInfoPopulator;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.services.user.UserService;
 import io.swagger.annotations.ApiResponse;

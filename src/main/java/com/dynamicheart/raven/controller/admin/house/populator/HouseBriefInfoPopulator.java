@@ -1,6 +1,6 @@
-package com.dynamicheart.raven.controller.app.house.populator.admin;
+package com.dynamicheart.raven.controller.admin.house.populator;
 
-import com.dynamicheart.raven.controller.app.house.field.admin.HouseBriefInfo;
+import com.dynamicheart.raven.controller.admin.house.field.HouseBriefInfo;
 import com.dynamicheart.raven.controller.common.AbstractDataPopulator;
 import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.utils.exception.ConversionException;

@@ -1,11 +1,11 @@
-package com.dynamicheart.raven.controller.app.house;
+package com.dynamicheart.raven.controller.admin.house;
 
 import com.dynamicheart.raven.constant.Constants;
-import com.dynamicheart.raven.controller.app.house.field.admin.HouseBriefInfo;
-import com.dynamicheart.raven.controller.app.house.field.admin.HouseDetailForm;
-import com.dynamicheart.raven.controller.app.house.populator.admin.HouseBriefInfoPopulator;
-import com.dynamicheart.raven.controller.app.house.populator.admin.HouseDetailFormPopulator;
-import com.dynamicheart.raven.controller.app.user.field.admin.UserBriefInfo;
+import com.dynamicheart.raven.controller.admin.house.field.HouseBriefInfo;
+import com.dynamicheart.raven.controller.admin.house.field.HouseDetailForm;
+import com.dynamicheart.raven.controller.admin.house.populator.HouseBriefInfoPopulator;
+import com.dynamicheart.raven.controller.admin.house.populator.HouseDetailFormPopulator;
+import com.dynamicheart.raven.controller.admin.user.field.UserBriefInfo;
 import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.model.member.Member;
 import com.dynamicheart.raven.services.house.HouseService;

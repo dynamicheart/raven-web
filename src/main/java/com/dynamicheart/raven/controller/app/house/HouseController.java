@@ -24,9 +24,10 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/houses")
 public class HouseController {
 
     @Inject
@@ -44,7 +45,28 @@ public class HouseController {
     @Inject
     private UpdateHouseFormPopulator updateHouseFormPopulator;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/users/{userId}/houses", method = RequestMethod.GET)
+    @Authorization
+    @ApiResponses({
+            @ApiResponse(code = 200, response = HouseInfoFields.class, responseContainer = "List", message = "Get all inravens")
+    })
+    public ResponseEntity<?> getAll(@PathVariable String userId, @CurrentUser @ApiIgnore User currentUser) throws Exception {
+        if (!userId.equals(currentUser.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
+        }
+
+        List<Member> members = memberService.findByUser(currentUser);
+
+        List<HouseInfoFields> houseInfoFieldsList = new ArrayList<>();
+
+        for (Member member : members) {
+            houseInfoFieldsList.add(houseInfoFieldsPopulator.populate(member.getHouse()));
+        }
+
+        return new ResponseEntity<>(houseInfoFieldsList, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/api/v1/houses/{id}", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Get house info")
@@ -63,7 +85,7 @@ public class HouseController {
         return new ResponseEntity<>(houseInfoFields, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/houses", method = RequestMethod.POST)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Create a new house")
@@ -77,19 +99,19 @@ public class HouseController {
         return new ResponseEntity<>(houseInfoFields, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/v1/houses/{id}", method = RequestMethod.PUT)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Update house info")
     })
     public ResponseEntity<?> put(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser, @RequestBody UpdateHouseForm updateHouseForm) throws Exception {
         House house = houseService.getById(id);
-        if (house == null){
+        if (house == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         Member currentUserMember = memberService.findTopByHouseAndUser(house, currentUser);
-        if(currentUserMember == null || !currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD)){
+        if (currentUserMember == null || !currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
@@ -101,19 +123,19 @@ public class HouseController {
         return new ResponseEntity<>(houseInfoFields, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/v1/houses/{id}", method = RequestMethod.DELETE)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Update the house")
     })
-    public ResponseEntity<?> delete(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception{
+    public ResponseEntity<?> delete(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception {
         House house = houseService.getById(id);
-        if (house == null){
+        if (house == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         Member currentUserMember = memberService.findTopByHouseAndUser(house, currentUser);
-        if(currentUserMember == null || !currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD)){
+        if (currentUserMember == null || !currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
