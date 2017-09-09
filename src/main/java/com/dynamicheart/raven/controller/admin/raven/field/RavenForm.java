@@ -1,9 +1,8 @@
-package com.dynamicheart.raven.controller.admin.house.field;
+package com.dynamicheart.raven.controller.admin.raven.field;
 
-import com.dynamicheart.raven.model.house.House;
+import com.dynamicheart.raven.model.raven.Raven;
 
-public class HouseDetailForm extends House {
-    private String master;
+public class RavenForm extends Raven {
 
     private String createdDateString;
 
@@ -24,13 +23,4 @@ public class HouseDetailForm extends House {
     public void setUpdatedDateString(String updatedDateString) {
         this.updatedDateString = updatedDateString;
     }
-
-    public String getMaster() {
-        return master;
-    }
-
-    public void setMaster(String master) {
-        this.master = master;
-    }
-
 }

@@ -23,4 +23,6 @@ public interface RavenRepository extends MongoRepository<Raven, String> {
     List<Raven> findByDescriptionLike(String description);
 
     List<Raven> findByHouseId(String houseId);
+
+    Raven findById(String id);
 }

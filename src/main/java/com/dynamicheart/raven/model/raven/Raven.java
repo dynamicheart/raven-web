@@ -18,7 +18,7 @@ import java.util.List;
  * Created by dynamicheart on 21/8/2017.
  */
 @Document
-public class Raven extends RavenEntity<String, Raven>{
+public class Raven extends RavenEntity<String, Raven> {
     @Id
     private String id;
 
@@ -60,6 +60,10 @@ public class Raven extends RavenEntity<String, Raven>{
     @LastModifiedDate
     @Field("updated_date")
     private Date updatedDate;
+
+    public Boolean getMold() {
+        return mold;
+    }
 
     public String getId() {
         return id;
@@ -165,8 +169,10 @@ public class Raven extends RavenEntity<String, Raven>{
         this.updatedDate = updatedDate;
     }
 
+    /*
     @Override
     public boolean equals(Object object) {
         return object instanceof Raven && super.equals(object);
     }
+    */
 }

@@ -1,5 +1,6 @@
 package com.dynamicheart.raven.model.serve;
 
+import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.model.generic.RavenEntity;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -28,9 +29,12 @@ public class Serve extends RavenEntity<String, Serve>{
     @Field("content")
     private String content;
 
-    private Integer status;
+    /*changes*/
+    @Field("status")
+    private Integer status= Constants.SERVE_STATUS_HANDLING;
 
     @CreatedDate
+    @Field("created_date")
     private Date createdDate;
 
     public String getId() {

@@ -1,5 +1,6 @@
 package com.dynamicheart.raven.services.whistleblowing;
 
+import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.model.whistleblowing.WhistleBlowing;
 import com.dynamicheart.raven.repositories.whistleblowing.WhistleBlowingRepository;
 import com.dynamicheart.raven.services.generic.RavenEntityServiceImpl;
@@ -23,5 +24,10 @@ public class WhistleBlowingServiceImpl extends RavenEntityServiceImpl<String, Wh
     @Override
     public List<WhistleBlowing> getAll() {
         return whistleBlowingRepository.findAll();
+    }
+
+    @Override
+    public List<WhistleBlowing> getAllHandling() {
+        return whistleBlowingRepository.findAllByStatus(Constants.WHISTLE_BLOWING_STATUS_HANDLING);
     }
 }
