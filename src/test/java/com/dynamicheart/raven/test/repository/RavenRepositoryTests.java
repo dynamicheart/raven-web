@@ -25,6 +25,11 @@ public class RavenRepositoryTests {
 
     @Test
     public void saveTest() {
-        Raven raven = repository.save(new Raven());
+        Raven raven = new Raven();
+        raven.setDescription("desc");
+        raven.setAddresserId("59b256848007834ffc5b3978");
+        raven.setTitle("title");
+        raven.setHouseId("59b3de2a80078339a0209128");
+        repository.save(raven);
     }
 }

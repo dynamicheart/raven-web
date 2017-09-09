@@ -31,7 +31,7 @@ public class MemberRepositoryTest {
         Member member=new Member();
         member.setHouse(houseRepository.findHousesByNameLike("m").get(0));
         member.setRole(Constants.MEMBER_ROLE_LORD);
-        member.setUser(userRepository.findUserByUsername("julius_chen"));
+        member.setUser(userRepository.findUserByUsername("admin"));
         memberRepository.save(member);
     }
 }
