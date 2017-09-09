@@ -11,9 +11,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by dynamicheart on 6/8/2017.
- */
 @Document
 public class House extends RavenEntity<String,House>{
     @Id

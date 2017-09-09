@@ -28,10 +28,10 @@ public class MemberRepositoryTest {
 
     @Test
     public void Test() {
-        Member member=memberRepository.findByHouse(houseRepository.findHousesByNameLike("s").get(0)).get(0);
-        //member.setHouse(houseRepository.findHousesByNameLike("s").get(0));
+        Member member=new Member();
+        member.setHouse(houseRepository.findHousesByNameLike("m").get(0));
         member.setRole(Constants.MEMBER_ROLE_LORD);
-        //member.setUser(userRepository.findUserByUsername("julius_chen"));
+        member.setUser(userRepository.findUserByUsername("julius_chen"));
         memberRepository.save(member);
     }
 }
