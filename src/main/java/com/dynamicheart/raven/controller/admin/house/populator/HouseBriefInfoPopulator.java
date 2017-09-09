@@ -18,8 +18,8 @@ public class HouseBriefInfoPopulator extends AbstractDataPopulator<House, HouseB
 
     @Override
     public HouseBriefInfo populate(House house, HouseBriefInfo houseBriefInfo) throws ConversionException {
-        houseBriefInfo.setGroupId(house.getId());
-        houseBriefInfo.setGroupName(house.getName());
+        houseBriefInfo.setId(house.getId());
+        houseBriefInfo.setName(house.getName());
         return houseBriefInfo;
     }
 
