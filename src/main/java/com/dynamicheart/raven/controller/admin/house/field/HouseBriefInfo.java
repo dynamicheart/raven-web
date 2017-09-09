@@ -3,23 +3,23 @@ package com.dynamicheart.raven.controller.admin.house.field;
 import java.io.Serializable;
 
 public class HouseBriefInfo implements Serializable {
-    private String groupId;
+    private String id;
 
-    private String groupName;
+    private String name;
 
-    public String getGroupId() {
-        return groupId;
+    public String getId() {
+        return id;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public String getName() {
+        return name;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setName(String name) {
+        this.name = name;
     }
 }
