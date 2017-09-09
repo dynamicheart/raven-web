@@ -9,10 +9,6 @@ public abstract class RavenEntity<K extends Serializable & Comparable<K>, E exte
 
     public abstract void setId(K id);
 
-    public boolean isNew() {
-        return getId() == null;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object object) {
