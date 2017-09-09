@@ -32,17 +32,16 @@ public class AdminRavenController {
     @Inject
     private HouseService houseService;
 
-    @RequestMapping(value = "searchByAddresser/{username}", method = RequestMethod.GET)
+    @RequestMapping(value = "searchByAddresser/{userId}", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = List.class, message = "Get ravens by sender USERNAME")
+            @ApiResponse(code = 200, response = List.class, message = "Get ravens by sender id")
     })
-    public ResponseEntity<?> searchByAddresser(@PathVariable String username)throws Exception{
-        User user=userService.getByName(username);
-        if(user==null)
+    public ResponseEntity<?> searchByAddresser(@PathVariable String userId)throws Exception{
+        if(userService.exists(userId))
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
 
-        List<Raven> ravens = ravenService.findByAddresserId(user.getId());
+        List<Raven> ravens = ravenService.findByAddresserId(userId);
 
         return new ResponseEntity<>(ravens,HttpStatus.OK);
     }
@@ -61,17 +60,16 @@ public class AdminRavenController {
         return new ResponseEntity<>(ravens,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "searchByHouse/{houseName}", method = RequestMethod.GET)
+    @RequestMapping(value = "searchByHouse/{houseId}", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = List.class, message = "Get ravens by GROUPNAME")
+            @ApiResponse(code = 200, response = List.class, message = "Get ravens by group id")
     })
-    public ResponseEntity<?> searchByHouse(@PathVariable String houseName)throws Exception{
-        House house=houseService.getByName(houseName);
-        if(house==null)
+    public ResponseEntity<?> searchByHouse(@PathVariable String houseId)throws Exception{
+        if(houseService.exists(houseId))
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
 
-        List<Raven> ravens = ravenService.findByHouseId(house.getId());
+        List<Raven> ravens = ravenService.findByHouseId(houseId);
 
         return new ResponseEntity<>(ravens,HttpStatus.OK);
     }
