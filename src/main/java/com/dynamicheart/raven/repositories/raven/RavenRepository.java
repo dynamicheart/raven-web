@@ -19,4 +19,8 @@ public interface RavenRepository extends MongoRepository<Raven, String> {
 
     @Query("{ $and: [ {'addressee_ids' : ?0 }, {'created_date': { '$gt': ?1 } } ] }")
     List<Raven> findByAddresseeIdAndCreatedDateAfter(String addresseeId, Date date);
+
+    List<Raven> findByDescriptionLike(String description);
+
+    List<Raven> findByHouseId(String houseId);
 }

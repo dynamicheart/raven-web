@@ -11,11 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 
-/**
- * Created by dynamicheart on 6/8/2017.
- */
+
 @Document
-public class User extends RavenEntity<String, User>{
+public class User extends RavenEntity<String, User> {
     @Id
     private String id;
 
