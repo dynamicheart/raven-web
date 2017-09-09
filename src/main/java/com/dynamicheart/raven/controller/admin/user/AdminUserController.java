@@ -63,12 +63,11 @@ public class AdminUserController {
 
     @RequestMapping(value = "searchDetailById/{id}", method = RequestMethod.GET)
     @ApiResponses({
-            @ApiResponse(code = 200, response = UserInfoFields.class, message = "query user detail by id")
+            @ApiResponse(code = 200, response = User.class, message = "query user detail by id")
     })
     ResponseEntity<?> getDById(@PathVariable String id) throws Exception{
         User user=userService.getById(id);
-        UserInfoFields userInfoFields=userInfoFieldsPopulator.populate(user);
-        return new ResponseEntity<>(userInfoFields, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 

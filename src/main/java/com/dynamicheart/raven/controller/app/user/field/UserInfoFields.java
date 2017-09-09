@@ -1,6 +1,7 @@
 package com.dynamicheart.raven.controller.app.user.field;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class UserInfoFields implements Serializable {
 
@@ -17,6 +18,8 @@ public class UserInfoFields implements Serializable {
     private Integer status;
 
     private String avatar;
+
+    private Date createdDate;
 
     public String getId() {
         return id;
@@ -64,5 +67,13 @@ public class UserInfoFields implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 }

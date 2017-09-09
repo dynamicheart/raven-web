@@ -31,6 +31,19 @@ public class WhistleBlowing extends RavenEntity<String, WhistleBlowing> {
     @CreatedDate
     private Date createdDate;
 
+    /*changes*/
+    @Field("status")
+    private int status;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+    /*end changes*/
+
     public String getId() {
         return id;
     }
