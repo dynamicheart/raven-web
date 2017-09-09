@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.dynamicheart.raven.application.ApplicationConfiguration;
 import com.dynamicheart.raven.model.raven.Raven;
+import com.dynamicheart.raven.repositories.house.HouseRepository;
 import com.dynamicheart.raven.repositories.raven.RavenRepository;
+import com.dynamicheart.raven.repositories.user.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,8 +25,17 @@ public class RavenRepositoryTests {
     @Inject
     RavenRepository repository;
 
+    @Inject
+    HouseRepository houseRepository;
+
+    @Inject
+    UserRepository userRepository;
+
     @Test
     public void saveTest() {
-        Raven raven = repository.save(new Raven());
+        Raven raven=new Raven();
+        raven.setAddresserId(userRepository.findUserByUsername("julius_chen").getId());
+        raven.setHouseId("lol");
+        repository.save(raven);
     }
 }

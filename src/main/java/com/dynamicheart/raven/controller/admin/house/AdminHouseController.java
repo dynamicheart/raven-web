@@ -65,6 +65,9 @@ public class AdminHouseController {
     })
     ResponseEntity<?> getDById(@PathVariable String id) throws Exception{
         String master=null;
+        if(!houseService.exists(id))
+            return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+
         House house=houseService.getById(id);
         List<Member> memberList=memberService.findByHouse(house);
 
