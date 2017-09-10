@@ -23,6 +23,10 @@ public class ServeRepositoryTest {
     @Test
     public void saveTest() {
         Serve serve = new Serve();
+        serve.setCreatedDate(new Date());
+        serve.setContent("Content");
+        serve.setHouseId("59b3de2a80078339a0209128");
+        serve.setManId("59b256848007834ffc5b3978");
         repository.save(serve);
     }
 }

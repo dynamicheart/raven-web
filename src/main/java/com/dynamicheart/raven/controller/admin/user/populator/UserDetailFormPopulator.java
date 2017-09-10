@@ -28,6 +28,7 @@ public class UserDetailFormPopulator extends AbstractDataPopulator<User,UserDeta
         userDetailForm.setPassword(user.getPassword());
         userDetailForm.setPhoneNumber(user.getPhoneNumber());
         userDetailForm.setStatus(user.getStatus());
+        userDetailForm.setUsername(user.getUsername());
 
 
         SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
