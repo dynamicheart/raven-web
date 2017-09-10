@@ -15,10 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.inject.Inject;
@@ -43,7 +40,7 @@ public class TokenController {
     @ApiResponses({
             @ApiResponse(code = 200, response = AuthenticationModel.class, message = "Login")
     })
-    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<?> login(@RequestBody String username, @RequestBody String password) {
         Assert.notNull(username, Message.MESSAGE_USERNAME_NOT_EMPTY);
         Assert.notNull(password, Message.MESSAGE_PASSWORD_NOT_EMPTY);
         User user = userRepository.findUserByUsername(username);
