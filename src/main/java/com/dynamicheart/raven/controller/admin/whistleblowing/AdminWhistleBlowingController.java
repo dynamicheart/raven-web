@@ -4,10 +4,13 @@ import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.constant.Message;
+import com.dynamicheart.raven.controller.admin.whistleblowing.field.WhistleBlowingForm;
+import com.dynamicheart.raven.controller.admin.whistleblowing.populator.WhistleBlowingFormPopulator;
 import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.model.whistleblowing.WhistleBlowing;
 import com.dynamicheart.raven.services.whistleblowing.WhistleBlowingService;
+import com.dynamicheart.raven.utils.exception.ConversionException;
 import com.dynamicheart.raven.utils.exception.ServiceException;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -25,21 +28,25 @@ public class AdminWhistleBlowingController {
     @Inject
     private WhistleBlowingService whistleBlowingService;
 
+    @Inject
+    private WhistleBlowingFormPopulator whistleBlowingFormPopulator;
+
     @RequestMapping(name="allWhistleBlowing", method = RequestMethod.GET)
     @ApiResponses({
             @ApiResponse(code = 200, response = List.class, message = "query all complaints")
     })
-    public ResponseEntity<?> allWhistleBlowing(){
+    public ResponseEntity<?> allWhistleBlowing() throws ConversionException {
         List<WhistleBlowing> whistleBlowingList=whistleBlowingService.getAll();
 
-        return new ResponseEntity<>(whistleBlowingList,HttpStatus.OK);
+        List<WhistleBlowingForm> whistleBlowingFormList=whistleBlowingFormPopulator.populateList(whistleBlowingList);
+        return new ResponseEntity<>(whistleBlowingFormList,HttpStatus.OK);
     }
 
     @RequestMapping(name="closeWhistleBlowing/{complaintId}", method = RequestMethod.PUT)
     @ApiResponses({
-            @ApiResponse(code = 200, response = WhistleBlowing.class, message = "close a complaint")
+            @ApiResponse(code = 200, response = WhistleBlowingForm.class, message = "close a complaint")
     })
-    public ResponseEntity<?> closeWhistleBlowing(@PathVariable String complaintId) throws ServiceException {
+    public ResponseEntity<?> closeWhistleBlowing(@PathVariable String complaintId) throws ServiceException, ConversionException {
         if(!whistleBlowingService.exists(complaintId))
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
 
@@ -48,6 +55,8 @@ public class AdminWhistleBlowingController {
         whistleBlowing.setStatus(Constants.WHISTLE_BLOWING_STATUS_FINISHED);
         whistleBlowingService.save(whistleBlowing);
 
-        return new ResponseEntity<>(whistleBlowing,HttpStatus.OK);
+        WhistleBlowingForm whistleBlowingForm=whistleBlowingFormPopulator.populate(whistleBlowing);
+
+        return new ResponseEntity<>(whistleBlowingForm,HttpStatus.OK);
     }
 }
