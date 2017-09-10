@@ -11,9 +11,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by dynamicheart on 6/8/2017.
- */
 @Configuration
 @ComponentScan({"com.dynamicheart.raven"})
 @EnableAutoConfiguration
