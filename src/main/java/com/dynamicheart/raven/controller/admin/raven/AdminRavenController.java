@@ -91,6 +91,20 @@ public class AdminRavenController {
         return new ResponseEntity<>(ravenFormList,HttpStatus.OK);
     }
 
+    @RequestMapping(value = "getById/{ravenId}", method = RequestMethod.GET)
+    @ApiResponses({
+            @ApiResponse(code = 200, response = RavenForm.class, message = "get raven by id")
+    })
+    public ResponseEntity<?> getById(@PathVariable String ravenId)throws Exception{
+        if(!ravenService.exists(ravenId))
+            return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+
+        Raven raven=ravenService.findById(ravenId);
+        RavenForm ravenForm=ravenFormPopulator.populate(raven);
+
+        return new ResponseEntity<>(ravenForm,HttpStatus.OK);
+    }
+
     @RequestMapping(value = "deleteRaven/{ravenId}", method = RequestMethod.DELETE)
     @ApiResponses({
             @ApiResponse(code = 200, response = RavenForm.class, message = "delete notification")

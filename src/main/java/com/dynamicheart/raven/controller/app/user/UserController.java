@@ -2,16 +2,12 @@ package com.dynamicheart.raven.controller.app.user;
 
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
-import com.dynamicheart.raven.authorization.manager.TokenManager;
-import com.dynamicheart.raven.authorization.model.TokenModel;
-import com.dynamicheart.raven.constant.Message;
 import com.dynamicheart.raven.controller.app.user.field.CreateUserForm;
 import com.dynamicheart.raven.controller.app.user.field.UpdateUserForm;
 import com.dynamicheart.raven.controller.app.user.field.UserInfoFields;
 import com.dynamicheart.raven.controller.app.user.populator.CreateUserFormPopulator;
 import com.dynamicheart.raven.controller.app.user.populator.UpdateUserFormPopulator;
 import com.dynamicheart.raven.controller.app.user.populator.UserInfoFieldsPopulator;
-import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
 import com.dynamicheart.raven.leancloud.manager.InstallationManager;
 import com.dynamicheart.raven.leancloud.model.installation.InstallationModel;
 import com.dynamicheart.raven.model.user.User;
@@ -26,14 +22,10 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.inject.Inject;
 
 @RestController
-@RequestMapping("/api/v1/users")
 public class UserController {
 
     @Inject
     private UserService userService;
-
-    @Inject
-    private TokenManager tokenManager;
 
     @Inject
     private InstallationManager installationManager;
@@ -47,22 +39,17 @@ public class UserController {
     @Inject
     private UpdateUserFormPopulator updateUserFormPopulator;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/user", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = UserInfoFields.class, message = "Delete user")
+            @ApiResponse(code = 200, response = UserInfoFields.class, message = "Get user info")
     })
-    public ResponseEntity<?> get(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception{
-        if(!id.equals(currentUser.getId())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
-
+    public ResponseEntity<?> get(@CurrentUser @ApiIgnore User currentUser) throws Exception{
         UserInfoFields userInfoFields = infoFieldsPopulator.populate(currentUser);
-
         return new ResponseEntity<>(userInfoFields, HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/users", method = RequestMethod.POST)
     @ApiResponses({
             @ApiResponse(code = 200, response = UserInfoFields.class, message = "Create a user")
     })
@@ -79,54 +66,42 @@ public class UserController {
         return new ResponseEntity<>(userInfoFields, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/v1/user", method = RequestMethod.PATCH)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = UserInfoFields.class, message = "Update user")
     })
-    public ResponseEntity<?> put(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser, @RequestBody UpdateUserForm updateUserForm) throws Exception{
-        if(!id.equals(currentUser.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
+    public ResponseEntity<?> patch(@CurrentUser @ApiIgnore User currentUser, @RequestBody UpdateUserForm updateUserForm) throws Exception{
 
-        currentUser = updateUserFormPopulator.populate(updateUserForm);
+        currentUser = updateUserFormPopulator.populate(updateUserForm, currentUser);
         currentUser = userService.save(currentUser);
 
         UserInfoFields userInfoFields = infoFieldsPopulator.populate(currentUser);
-
         return new ResponseEntity<>(userInfoFields, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/api/v1/user", method = RequestMethod.DELETE)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = UserInfoFields.class, message = "Delete user")
     })
-    public ResponseEntity<?> delete(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception{
-        if(!id.equals(currentUser.getId())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
+    public ResponseEntity<?> delete(@CurrentUser @ApiIgnore User currentUser) throws Exception{
 
         userService.delete(currentUser);
-
         UserInfoFields userInfoFields = infoFieldsPopulator.populate(currentUser);
 
         return new ResponseEntity<>(userInfoFields, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}/installations", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/user/installation", method = RequestMethod.POST)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = InstallationModel.class, message = "Update installation id")
     })
-    public ResponseEntity<?> postInstallationId(@PathVariable String id,
-                                                @RequestParam String installationId,
+    public ResponseEntity<?> postInstallationId(@RequestParam String installationId,
                                                 @CurrentUser @ApiIgnore User currentUser) throws Exception{
-        if(!id.equals(currentUser.getId())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
 
-        InstallationModel installation = installationManager.save(id, installationId);
+        InstallationModel installation = installationManager.save(currentUser.getId(), installationId);
         return new ResponseEntity<>(installation, HttpStatus.OK);
     }
 }

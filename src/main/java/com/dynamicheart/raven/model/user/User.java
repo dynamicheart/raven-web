@@ -129,6 +129,10 @@ public class User extends RavenEntity<String, User> {
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    public Boolean getAdmin() {
+        return admin;
+    }
+
     @Override
     public boolean equals(Object object) {
         return object instanceof User && super.equals(object);
