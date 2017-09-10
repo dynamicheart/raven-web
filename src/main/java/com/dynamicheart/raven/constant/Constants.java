@@ -13,6 +13,19 @@ public class Constants {
     public static final Integer WHISTLE_BLOWING_STATUS_HANDLING = 0;
     public static final Integer WHISTLE_BLOWING_STATUS_FINISHED = 1;
 
+    // 其它
+    public static final Integer WHISTLE_BLOWING_TYPE_OTHERS = 0;
+    // 广告
+    public static final Integer WHISTLE_BLOWING_TYPE_ADVERTISEMENT = 1;
+    // 淫秽色情
+    public static final Integer WHISTLE_BLOWING_TYPE_PORN = 2;
+    // 有害信息
+    public static final Integer WHISTLE_BLOWING_TYPE_HARM = 3;
+    // 违法信息
+    public static final Integer WHISTLE_BLOWING_TYPE_ILLEGAL = 4;
+    // 虚假信息
+    public static final Integer WHISTLE_BLOWING_TYPE_FALSE = 5;
+
     public static final Integer HOUSE_STATUS_NORMAL = 0;
     public static final Integer HOUSE_STATUS_DISABLE = 1;
 
