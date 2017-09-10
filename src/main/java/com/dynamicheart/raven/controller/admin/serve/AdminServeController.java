@@ -56,7 +56,7 @@ public class AdminServeController {
             @ApiResponse(code = 200, response = List.class, message = "query all applications")
     })
     public ResponseEntity<?> allServes() throws ConversionException {
-        List<Serve> serveList=serveService.getAllHandling();
+        List<Serve> serveList=serveService.getAllHandlingToPublic();
 
         List<ServeForm> serveFormList=serveFormPopulator.populateList(serveList);
         return new ResponseEntity<>(serveFormList, HttpStatus.OK);
