@@ -27,6 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.inject.Inject;
 import java.util.List;
 
+/* TODO
+   filter type in search&judge
+    AFTER synchronized with android
+ */
+
+
 @RestController
 @RequestMapping("/admin/api/v1/serves")
 public class AdminServeController {
@@ -45,7 +51,7 @@ public class AdminServeController {
     @Inject
     private ServeFormPopulator serveFormPopulator;
 
-    @RequestMapping(name="allServes", method = RequestMethod.GET)
+    @RequestMapping(value="allServes", method = RequestMethod.GET)
     @ApiResponses({
             @ApiResponse(code = 200, response = List.class, message = "query all applications")
     })
@@ -57,7 +63,7 @@ public class AdminServeController {
     }
 
 
-    @RequestMapping(name="judgeServe/{serveId}/{judge}", method = RequestMethod.PUT)
+    @RequestMapping(value="judgeServe/{serveId}/{judge}", method = RequestMethod.PUT)
     @ApiResponses({
             @ApiResponse(code = 200, response = ServeForm.class, message = "judge an application: 1 for approval, 0 for rejection")
     })
