@@ -30,7 +30,7 @@ public class WhistleBlowing extends RavenEntity<String, WhistleBlowing> {
     private Integer status = Constants.WHISTLE_BLOWING_STATUS_HANDLING;
 
     @Field("type")
-    private Integer type = Constants.WHISTLE_BLOWING_STATUS_HANDLING;
+    private Integer type = Constants.WHISTLE_BLOWING_TYPE_ADVERTISEMENT;
 
     @Field("description")
     private String description;
