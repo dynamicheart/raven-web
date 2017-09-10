@@ -1,5 +1,6 @@
 package com.dynamicheart.raven.model.whistleblowing;
 
+import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.model.generic.RavenEntity;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -30,7 +31,7 @@ public class WhistleBlowing extends RavenEntity<String, WhistleBlowing> {
 
     /*changes*/
     @Field("status")
-    private int status;
+    private int status= Constants.WHISTLE_BLOWING_STATUS_HANDLING;
 
     public int getStatus() {
         return status;

@@ -45,4 +45,14 @@ public class RavenServiceImpl extends RavenEntityServiceImpl<String, Raven>
     public List<Raven> findByHouseId(String houseId) {
         return ravenRepository.findByHouseId(houseId);
     }
+
+    @Override
+    public Raven findById(String id) {
+        return ravenRepository.findById(id);
+    }
+
+    @Override
+    public List<Raven> findAll() {
+        return ravenRepository.findAll();
+    }
 }
