@@ -26,6 +26,7 @@ public class ServeFormPopulator extends AbstractDataPopulator<Serve,ServeForm>{
         serveForm.setHouseId(serve.getHouseId());
         serveForm.setId(serve.getId());
         serveForm.setManId(serve.getManId());
+        serveForm.setType(serve.getType());
 
         SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
         serveForm.setCreatedDateString(sdf.format(serve.getCreatedDate()));

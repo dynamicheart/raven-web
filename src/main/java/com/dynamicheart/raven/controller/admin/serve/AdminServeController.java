@@ -72,10 +72,11 @@ public class AdminServeController {
             User user=userService.getById(serve.getManId());
             Member member=memberService.findTopByHouseAndUser(house,user);
 
-            //NOTE that currently you can only be accepted to be a MAESTER
+            if(member==null||member.getRole()!=Constants.MEMBER_ROLE_LORD)
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-            member.setRole(Constants.MEMBER_ROLE_MAESTER);
-            memberService.save(member);
+            house.setPublicity(true);
+            houseService.save(house);
         }
         else if(judge.equals("0"))
             serve.setStatus(Constants.SERVE_STATUS_REFUSED);

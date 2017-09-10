@@ -32,9 +32,20 @@ public class Serve extends RavenEntity<String, Serve>{
     @Field("status")
     private Integer status= Constants.SERVE_STATUS_HANDLING;
 
+    @Field("type")
+    private Integer type=Constants.SERVE_TYPE_ORDINARY;
+
     @CreatedDate
     @Field("created_date")
     private Date createdDate;
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     public String getId() {
         return id;
