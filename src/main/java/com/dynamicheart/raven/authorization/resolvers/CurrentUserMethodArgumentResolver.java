@@ -7,6 +7,7 @@ import com.dynamicheart.raven.repositories.user.UserRepository;
 import com.dynamicheart.raven.services.user.UserService;
 import com.dynamicheart.raven.utils.exception.ServiceException;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
@@ -16,9 +17,7 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 
 import javax.inject.Inject;
 
-/**
- * Created by dynamicheart on 21/8/2017.
- */
+@Component
 public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Inject
