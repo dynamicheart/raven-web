@@ -8,5 +8,5 @@ import java.util.List;
 public interface ServeService extends RavenEntityService<String, Serve>{
     List<Serve> getAll();
 
-    List<Serve> getAllHandling();
+    List<Serve> getAllHandlingToPublic();
 }

@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface ServeRepository extends MongoRepository<Serve, String> {
     List<Serve> findAllByStatus(int status);
+
+    List<Serve> findAllByStatusAndType(int status,int type);
 }
