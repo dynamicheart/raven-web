@@ -6,6 +6,7 @@ import com.dynamicheart.raven.authorization.manager.TokenManager;
 import com.dynamicheart.raven.authorization.model.AuthenticationModel;
 import com.dynamicheart.raven.authorization.model.TokenModel;
 import com.dynamicheart.raven.constant.Message;
+import com.dynamicheart.raven.controller.app.token.field.LoginForm;
 import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
 import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.repositories.user.UserRepository;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 
 /**
  * Created by dynamicheart on 21/8/2017.
@@ -40,11 +42,9 @@ public class TokenController {
     @ApiResponses({
             @ApiResponse(code = 200, response = AuthenticationModel.class, message = "Login")
     })
-    public ResponseEntity<?> login(@RequestBody String username, @RequestBody String password) {
-        Assert.notNull(username, Message.MESSAGE_USERNAME_NOT_EMPTY);
-        Assert.notNull(password, Message.MESSAGE_PASSWORD_NOT_EMPTY);
-        User user = userRepository.findUserByUsername(username);
-        if (user == null || !encoder.matches(password, user.getPassword())) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginForm loginForm) {
+        User user = userRepository.findUserByUsername(loginForm.getUsername());
+        if (user == null || !encoder.matches(loginForm.getUsername(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 

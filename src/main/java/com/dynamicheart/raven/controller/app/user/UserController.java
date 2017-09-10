@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 
 @RestController
 public class UserController {
@@ -53,7 +54,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, response = UserInfoFields.class, message = "Create a user")
     })
-    public ResponseEntity<?> post(@RequestBody CreateUserForm createUserForm) throws Exception{
+    public ResponseEntity<?> post(@RequestBody @Valid CreateUserForm createUserForm) throws Exception{
 
         User user = createUserFormPopulator.populate(createUserForm);
 
