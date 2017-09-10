@@ -98,7 +98,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, response = InstallationModel.class, message = "Update installation id")
     })
-    public ResponseEntity<?> postInstallationId(@RequestParam String installationId,
+    public ResponseEntity<?> postInstallationId(@RequestBody String installationId,
                                                 @CurrentUser @ApiIgnore User currentUser) throws Exception{
 
         InstallationModel installation = installationManager.save(currentUser.getId(), installationId);
