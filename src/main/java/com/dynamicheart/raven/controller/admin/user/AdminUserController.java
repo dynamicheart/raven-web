@@ -2,6 +2,8 @@ package com.dynamicheart.raven.controller.admin.user;
 
 import com.dynamicheart.raven.authorization.manager.TokenManager;
 import com.dynamicheart.raven.constant.Constants;
+import com.dynamicheart.raven.controller.admin.user.field.UserDetailForm;
+import com.dynamicheart.raven.controller.admin.user.populator.UserDetailFormPopulator;
 import com.dynamicheart.raven.controller.app.user.field.UserInfoFields;
 import com.dynamicheart.raven.controller.admin.user.field.UserBriefInfo;
 import com.dynamicheart.raven.controller.app.user.populator.UserInfoFieldsPopulator;
@@ -38,6 +40,9 @@ public class AdminUserController {
     @Inject
     private UserInfoFieldsPopulator userInfoFieldsPopulator;
 
+    @Inject
+    private UserDetailFormPopulator userDetailFormPopulator;
+
     @RequestMapping(value = "searchInfoByName/{username}", method = RequestMethod.GET)
     @ApiResponses({
             @ApiResponse(code = 200, response = UserBriefInfo.class, message = "query user info by username")
@@ -63,18 +68,20 @@ public class AdminUserController {
 
     @RequestMapping(value = "searchDetailById/{id}", method = RequestMethod.GET)
     @ApiResponses({
-            @ApiResponse(code = 200, response = User.class, message = "query user detail by id")
+            @ApiResponse(code = 200, response = UserDetailForm.class, message = "query user detail by id")
     })
     ResponseEntity<?> getDById(@PathVariable String id) throws Exception{
         User user=userService.getById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+
+        UserDetailForm userDetailForm=userDetailFormPopulator.populate(user);
+        return new ResponseEntity<>(userDetailForm, HttpStatus.OK);
     }
 
 
 
     @RequestMapping(value = "grantPrivilege/{id}", method = RequestMethod.PUT)
     @ApiResponses({
-            @ApiResponse(code = 200, response = User.class, message = "promote user Privilege")
+            @ApiResponse(code = 200, response = UserDetailForm.class, message = "promote user Privilege")
     })
     ResponseEntity<?> grantPrivilege(@PathVariable String id)throws Exception{
         if(userService.exists(id)==false)
@@ -84,12 +91,13 @@ public class AdminUserController {
         user.setAdmin(true);
         userService.update(user);
 
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        UserDetailForm userDetailForm=userDetailFormPopulator.populate(user);
+        return new ResponseEntity<>(userDetailForm, HttpStatus.OK);
     }
 
     @RequestMapping(value = "revokePrivilege/{id}", method = RequestMethod.PUT)
     @ApiResponses({
-            @ApiResponse(code = 200, response = User.class, message = "reduce user Privilege")
+            @ApiResponse(code = 200, response = UserDetailForm.class, message = "reduce user Privilege")
     })
     ResponseEntity<?> revokePrivilege(@PathVariable String id)throws Exception{
         if(userService.exists(id)==false)
@@ -99,12 +107,13 @@ public class AdminUserController {
         user.setAdmin(false);
         userService.update(user);
 
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        UserDetailForm userDetailForm=userDetailFormPopulator.populate(user);
+        return new ResponseEntity<>(userDetailForm, HttpStatus.OK);
     }
 
     @RequestMapping(value = "disableUser/{id}", method = RequestMethod.PUT)
     @ApiResponses({
-            @ApiResponse(code = 200, response = User.class, message = "disable user")
+            @ApiResponse(code = 200, response = UserDetailForm.class, message = "disable user")
     })
     ResponseEntity<?> disableUser(@PathVariable String id)throws Exception{
         if(userService.exists(id)==false)
@@ -114,12 +123,13 @@ public class AdminUserController {
         user.setStatus(Constants.USER_STATUS_DISABLE);
         userService.update(user);
 
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        UserDetailForm userDetailForm=userDetailFormPopulator.populate(user);
+        return new ResponseEntity<>(userDetailForm, HttpStatus.OK);
     }
 
     @RequestMapping(value = "activateUser/{id}", method = RequestMethod.PUT)
     @ApiResponses({
-            @ApiResponse(code = 200, response = User.class, message = "activate user")
+            @ApiResponse(code = 200, response = UserDetailForm.class, message = "activate user")
     })
     ResponseEntity<?> activateUser(@PathVariable String id)throws Exception{
         if(userService.exists(id)==false)
@@ -129,12 +139,13 @@ public class AdminUserController {
         user.setStatus(Constants.USER_STATUS_OK);
         userService.update(user);
 
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        UserDetailForm userDetailForm=userDetailFormPopulator.populate(user);
+        return new ResponseEntity<>(userDetailForm, HttpStatus.OK);
     }
 
     @RequestMapping(value = "censorAvatar/{id}", method = RequestMethod.PUT)
     @ApiResponses({
-            @ApiResponse(code = 200, response = User.class, message = "delete user avatar")
+            @ApiResponse(code = 200, response = UserDetailForm.class, message = "delete user avatar")
     })
     ResponseEntity<?> censorAvatar(@PathVariable String id)throws Exception{
         if(userService.exists(id)==false)
@@ -144,14 +155,14 @@ public class AdminUserController {
         user.setAvatar(null);
         userService.update(user);
 
-        return new ResponseEntity<>(user,HttpStatus.OK);
-    }
+        UserDetailForm userDetailForm=userDetailFormPopulator.populate(user);
+        return new ResponseEntity<>(userDetailForm, HttpStatus.OK);    }
 
 
 
     @RequestMapping(value = "deleteUser/{id}", method = RequestMethod.DELETE)
     @ApiResponses({
-            @ApiResponse(code = 200, response = User.class, message = "delete user avatar")
+            @ApiResponse(code = 200, response = UserDetailForm.class, message = "delete user avatar")
     })
     ResponseEntity<?> deleteUser(@PathVariable String id)throws Exception{
         if(userService.exists(id)==false)
@@ -160,7 +171,7 @@ public class AdminUserController {
         User user=userService.getById(id);
         userService.delete(user);
 
-        return new ResponseEntity<>(user,HttpStatus.OK);
-    }
+        UserDetailForm userDetailForm=userDetailFormPopulator.populate(user);
+        return new ResponseEntity<>(userDetailForm, HttpStatus.OK);    }
 
 }
