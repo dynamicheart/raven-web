@@ -36,7 +36,7 @@ public class AdminWhistleBlowingController {
             @ApiResponse(code = 200, response = List.class, message = "query all complaints")
     })
     public ResponseEntity<?> allWhistleBlowing() throws ConversionException {
-        List<WhistleBlowing> whistleBlowingList=whistleBlowingService.getAll();
+        List<WhistleBlowing> whistleBlowingList=whistleBlowingService.getAllHandling();
 
         List<WhistleBlowingForm> whistleBlowingFormList=whistleBlowingFormPopulator.populateList(whistleBlowingList);
         return new ResponseEntity<>(whistleBlowingFormList,HttpStatus.OK);
