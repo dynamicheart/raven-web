@@ -36,18 +36,12 @@ public class InRavenController {
             @ApiResponse(code = 200, response = InRavenInfoFields.class,  responseContainer = "List", message = "Get all inravens")
     })
     public ResponseEntity<?> getAll(@PathVariable String userId,
-                                    @RequestParam(required = false) Date dateAfter,
                                     @CurrentUser @ApiIgnore User currentUser) throws Exception {
         if (!currentUser.getId().equals(userId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
-        List<Raven> ravens;
-        if (dateAfter == null) {
-            ravens = ravenService.findByAddresseeId(userId);
-        } else {
-            ravens = ravenService.findByAddresseeIdAndCreatedDateAfter(userId, dateAfter);
-        }
+        List<Raven> ravens = ravenService.findByAddresseeId(userId);
 
         List<InRavenInfoFields> inRavenInfoFieldsList = new ArrayList<>();
         for(Raven raven: ravens){
