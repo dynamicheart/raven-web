@@ -49,17 +49,13 @@ public class RavenController {
     @Inject
     private LeanCloudService leanCloudService;
 
-    @RequestMapping(value = "/api/v1/users/{userId}/ravens", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/user/ravens", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = RavenInfoFields.class,  responseContainer = "List", message = "Get all ravens")
     })
-    public ResponseEntity<?> getAll(@PathVariable String userId, @CurrentUser @ApiIgnore User currentUser)throws Exception{
-        if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
-
-        List<Raven> ravens = ravenService.findByAddresserId(userId);
+    public ResponseEntity<?> getAll(@CurrentUser @ApiIgnore User currentUser)throws Exception{
+        List<Raven> ravens = ravenService.findByAddresserId(currentUser.getId());
 
         List<RavenInfoFields> ravenInfoFieldsList = new ArrayList<>();
         for(Raven raven: ravens){

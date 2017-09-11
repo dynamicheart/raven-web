@@ -21,7 +21,7 @@ public class UserRepositoryTest {
         User user=new User();
         user.setUsername("julius_chen");
         userRepository.save(user);
-        //System.out.println(userRepository.findUserByUsername("julius_chen"));
+        //System.out.println(userRepository.findTopByUsername("julius_chen"));
         System.out.println(userRepository.findAll());
     }
 }

@@ -21,6 +21,6 @@ public class SaveUserTest {
         user.setUsername("julius_chen");
         user.setPassword("666666");
         userRepository.save(user);
-        System.out.println(userRepository.findUserByUsername("julius_chen"));
+        System.out.println(userRepository.findTopByUsername("julius_chen"));
     }
 }
