@@ -30,18 +30,13 @@ public class InRavenController {
     @Inject
     private InRavenInfoFieldsPopulator inRavenInfoFieldsPopulator;
 
-    @RequestMapping(value = "/api/v1/users/{userId}/inravens", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/user/inravens", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = InRavenInfoFields.class,  responseContainer = "List", message = "Get all inravens")
     })
-    public ResponseEntity<?> getAll(@PathVariable String userId,
-                                    @CurrentUser @ApiIgnore User currentUser) throws Exception {
-        if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
-
-        List<Raven> ravens = ravenService.findByAddresseeId(userId);
+    public ResponseEntity<?> getAll(@CurrentUser @ApiIgnore User currentUser) throws Exception {
+        List<Raven> ravens = ravenService.findByAddresseeId(currentUser.getId());
 
         List<InRavenInfoFields> inRavenInfoFieldsList = new ArrayList<>();
         for(Raven raven: ravens){
