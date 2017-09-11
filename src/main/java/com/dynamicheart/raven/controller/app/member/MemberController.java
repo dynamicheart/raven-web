@@ -82,14 +82,13 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
-        if (memberService.findTopByHouseAndUser(house, currentUser) != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
-        }
-
-
-        User user = userService.getById(userId);
+        User user=userService.getById(userId);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
+        }
+        //bug fix: 不应该看当前用户有没有在通知组内，而应该看目标用户有没有
+        if (memberService.findTopByHouseAndUser(house, user) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GenericResponseBody(Message.MESSAGE_MEMBER_DUPLICATE));
         }
 
         Member member = new Member();
