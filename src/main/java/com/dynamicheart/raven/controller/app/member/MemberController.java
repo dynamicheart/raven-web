@@ -53,7 +53,8 @@ public class MemberController {
 
         Member member = memberService.findTopByHouseAndUser(house, currentUser);
 
-        if (!house.getPublicity() || member == null) {
+        //bug fix
+        if (!house.getPublicity() && member == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
