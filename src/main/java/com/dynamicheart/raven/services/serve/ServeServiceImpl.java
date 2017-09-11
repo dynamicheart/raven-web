@@ -30,4 +30,9 @@ public class ServeServiceImpl extends RavenEntityServiceImpl<String, Serve>
     public List<Serve> getAllHandlingToPublic() {
         return serveRepository.findAllByStatusAndType(Constants.SERVE_STATUS_HANDLING,Constants.SERVE_TYPE_ORDINARY);
     }
+
+    @Override
+    public List<Serve> getAllByManId(String manId) {
+        return serveRepository.findAllByManId(manId);
+    }
 }
