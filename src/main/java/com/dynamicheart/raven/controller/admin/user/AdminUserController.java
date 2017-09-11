@@ -1,5 +1,7 @@
 package com.dynamicheart.raven.controller.admin.user;
 
+import com.dynamicheart.raven.authorization.annotation.AdminAuthorization;
+import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.authorization.manager.TokenManager;
 import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.controller.admin.user.field.UserDetailForm;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -44,6 +47,7 @@ public class AdminUserController {
     private UserDetailFormPopulator userDetailFormPopulator;
 
     @RequestMapping(value = "searchInfoByName/{username}", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = UserBriefInfo.class, message = "query user info by username")
     })
@@ -54,6 +58,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "allUserInfo", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = List.class, message = "query all user infos")
     })
@@ -67,6 +72,7 @@ public class AdminUserController {
 
 
     @RequestMapping(value = "searchDetailById/{id}", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = UserDetailForm.class, message = "query user detail by id")
     })
@@ -80,6 +86,7 @@ public class AdminUserController {
 
 
     @RequestMapping(value = "grantPrivilege/{id}", method = RequestMethod.PUT)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = UserDetailForm.class, message = "promote user Privilege")
     })
@@ -96,6 +103,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "revokePrivilege/{id}", method = RequestMethod.PUT)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = UserDetailForm.class, message = "reduce user Privilege")
     })
@@ -112,12 +120,16 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "disableUser/{id}", method = RequestMethod.PUT)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = UserDetailForm.class, message = "disable user")
     })
-    ResponseEntity<?> disableUser(@PathVariable String id)throws Exception{
+    ResponseEntity<?> disableUser(@CurrentUser @ApiIgnore User currentUser, @PathVariable String id)throws Exception{
         if(userService.exists(id)==false)
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+
+        if(currentUser.getId().equals(id))
+            return new ResponseEntity<>(null,HttpStatus.FORBIDDEN);
 
         User user=userService.getById(id);
         user.setStatus(Constants.USER_STATUS_DISABLE);
@@ -128,6 +140,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "activateUser/{id}", method = RequestMethod.PUT)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = UserDetailForm.class, message = "activate user")
     })
@@ -144,6 +157,7 @@ public class AdminUserController {
     }
 
     @RequestMapping(value = "censorAvatar/{id}", method = RequestMethod.PUT)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = UserDetailForm.class, message = "delete user avatar")
     })
@@ -161,8 +175,9 @@ public class AdminUserController {
 
 
     @RequestMapping(value = "deleteUser/{id}", method = RequestMethod.DELETE)
+    @AdminAuthorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = UserDetailForm.class, message = "delete user avatar")
+            @ApiResponse(code = 200, response = UserDetailForm.class, message = "delete user")
     })
     ResponseEntity<?> deleteUser(@PathVariable String id)throws Exception{
         if(userService.exists(id)==false)
@@ -172,6 +187,7 @@ public class AdminUserController {
         userService.delete(user);
 
         UserDetailForm userDetailForm=userDetailFormPopulator.populate(user);
-        return new ResponseEntity<>(userDetailForm, HttpStatus.OK);    }
+        return new ResponseEntity<>(userDetailForm, HttpStatus.OK);
+    }
 
 }

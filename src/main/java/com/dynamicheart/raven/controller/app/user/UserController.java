@@ -2,12 +2,14 @@ package com.dynamicheart.raven.controller.app.user;
 
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
+import com.dynamicheart.raven.constant.Message;
 import com.dynamicheart.raven.controller.app.user.field.CreateUserForm;
 import com.dynamicheart.raven.controller.app.user.field.UpdateUserForm;
 import com.dynamicheart.raven.controller.app.user.field.UserInfoFields;
 import com.dynamicheart.raven.controller.app.user.populator.CreateUserFormPopulator;
 import com.dynamicheart.raven.controller.app.user.populator.UpdateUserFormPopulator;
 import com.dynamicheart.raven.controller.app.user.populator.UserInfoFieldsPopulator;
+import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
 import com.dynamicheart.raven.leancloud.manager.InstallationManager;
 import com.dynamicheart.raven.leancloud.model.installation.InstallationModel;
 import com.dynamicheart.raven.model.user.User;
@@ -58,7 +60,13 @@ public class UserController {
 
         User user = createUserFormPopulator.populate(createUserForm);
 
-        //TODO check duplicate
+        //check duplicate
+        if(userService.getByName(user.getUsername())!=null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_USERNAME_DUPLICATE));
+        if(userService.getByEmail(user.getEmail())!=null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_EMAIL_DUPLICATE));
+        if(userService.getByPhoneNumber(user.getPhoneNumber())!=null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_PHONE_NUM_DUPLICATE));
 
         user = userService.create(user);
 

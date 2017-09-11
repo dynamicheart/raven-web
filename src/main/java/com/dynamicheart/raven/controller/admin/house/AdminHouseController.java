@@ -99,7 +99,7 @@ public class AdminHouseController {
 
     @RequestMapping(value = "censorSigil/{id}", method = RequestMethod.PUT)
     @ApiResponses({
-            @ApiResponse(code = 200, response = House.class, message = "delete house avatar")
+            @ApiResponse(code = 200, response = HouseDetailForm.class, message = "delete house avatar")
     })
     ResponseEntity<?> censorSigil(@PathVariable String id) throws Exception{
         if(!houseService.exists(id))
@@ -109,12 +109,14 @@ public class AdminHouseController {
         house.setSigil(null);
         houseService.save(house);
 
-        return new ResponseEntity<>(house, HttpStatus.OK);
+        HouseDetailForm houseDetailForm=new HouseDetailForm();
+        houseDetailFormPopulator.populate(house,houseDetailForm,null);
+        return new ResponseEntity<>(houseDetailForm, HttpStatus.OK);
     }
 
     @RequestMapping(value = "setToPublic/{id}", method = RequestMethod.PUT)
     @ApiResponses({
-            @ApiResponse(code = 200, response = House.class, message = "set house to public")
+            @ApiResponse(code = 200, response = HouseDetailForm.class, message = "set house to public")
     })
     ResponseEntity<?> setToPublic(@PathVariable String id) throws Exception{
         if(!houseService.exists(id))
@@ -124,12 +126,14 @@ public class AdminHouseController {
         house.setPublicity(true);
         houseService.save(house);
 
-        return new ResponseEntity<>(house, HttpStatus.OK);
+        HouseDetailForm houseDetailForm=new HouseDetailForm();
+        houseDetailFormPopulator.populate(house,houseDetailForm,null);
+        return new ResponseEntity<>(houseDetailForm, HttpStatus.OK);
     }
 
     @RequestMapping(value = "setToPrivate/{id}", method = RequestMethod.PUT)
     @ApiResponses({
-            @ApiResponse(code = 200, response = House.class, message = "set house to private")
+            @ApiResponse(code = 200, response = HouseDetailForm.class, message = "set house to private")
     })
     ResponseEntity<?> setToPrivate(@PathVariable String id) throws Exception{
         if(!houseService.exists(id))
@@ -139,12 +143,14 @@ public class AdminHouseController {
         house.setPublicity(false);
         houseService.save(house);
 
-        return new ResponseEntity<>(house, HttpStatus.OK);
+        HouseDetailForm houseDetailForm=new HouseDetailForm();
+        houseDetailFormPopulator.populate(house,houseDetailForm,null);
+        return new ResponseEntity<>(houseDetailForm, HttpStatus.OK);
     }
 
     @RequestMapping(value = "disableHouse/{id}", method = RequestMethod.PUT)
     @ApiResponses({
-            @ApiResponse(code = 200, response = House.class, message = "disable house")
+            @ApiResponse(code = 200, response = HouseDetailForm.class, message = "disable house")
     })
     ResponseEntity<?> disableHouse(@PathVariable String id) throws Exception{
         if(!houseService.exists(id))
@@ -154,12 +160,14 @@ public class AdminHouseController {
         house.setStatus(Constants.HOUSE_STATUS_DISABLE);
         houseService.save(house);
 
-        return new ResponseEntity<>(house, HttpStatus.OK);
+        HouseDetailForm houseDetailForm=new HouseDetailForm();
+        houseDetailFormPopulator.populate(house,houseDetailForm,null);
+        return new ResponseEntity<>(houseDetailForm, HttpStatus.OK);
     }
 
     @RequestMapping(value = "activateHouse/{id}", method = RequestMethod.PUT)
     @ApiResponses({
-            @ApiResponse(code = 200, response = House.class, message = "activate house")
+            @ApiResponse(code = 200, response = HouseDetailForm.class, message = "activate house")
     })
     ResponseEntity<?> activateHouse(@PathVariable String id) throws Exception{
         if(!houseService.exists(id))
@@ -169,6 +177,8 @@ public class AdminHouseController {
         house.setStatus(Constants.HOUSE_STATUS_NORMAL);
         houseService.save(house);
 
-        return new ResponseEntity<>(house, HttpStatus.OK);
+        HouseDetailForm houseDetailForm=new HouseDetailForm();
+        houseDetailFormPopulator.populate(house,houseDetailForm,null);
+        return new ResponseEntity<>(houseDetailForm, HttpStatus.OK);
     }
 }

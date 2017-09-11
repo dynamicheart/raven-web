@@ -9,5 +9,8 @@ import java.util.List;
  * Created by dynamicheart on 21/8/2017.
  */
 public interface ServeRepository extends MongoRepository<Serve, String> {
-    List<Serve> findAllByStatus(int status);
+
+    List<Serve> findAllByStatusAndType(int status,int type);
+
+    List<Serve> findAllByManId(String manId);
 }

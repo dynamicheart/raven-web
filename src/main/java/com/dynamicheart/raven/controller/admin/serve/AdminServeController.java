@@ -56,7 +56,7 @@ public class AdminServeController {
             @ApiResponse(code = 200, response = List.class, message = "query all applications")
     })
     public ResponseEntity<?> allServes() throws ConversionException {
-        List<Serve> serveList=serveService.getAllHandling();
+        List<Serve> serveList=serveService.getAllHandlingToPublic();
 
         List<ServeForm> serveFormList=serveFormPopulator.populateList(serveList);
         return new ResponseEntity<>(serveFormList, HttpStatus.OK);
@@ -72,13 +72,16 @@ public class AdminServeController {
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
 
         Serve serve=serveService.getById(serveId);
+        if(serve.getType()!=Constants.SERVE_TYPE_ORDINARY||serve.getStatus()!=Constants.SERVE_STATUS_HANDLING)
+            return new ResponseEntity<>(null,HttpStatus.FORBIDDEN);
+
         if(judge.equals("1")) {
             serve.setStatus(Constants.SERVE_STATUS_ACCEPTED);
             House house=houseService.getById(serve.getHouseId());
             User user=userService.getById(serve.getManId());
             Member member=memberService.findTopByHouseAndUser(house,user);
 
-            if(member==null||member.getRole()!=Constants.MEMBER_ROLE_LORD)
+            if(user==null||member==null||user.getStatus()==Constants.USER_STATUS_DISABLE||member.getRole()!=Constants.MEMBER_ROLE_LORD||house.getStatus()==Constants.HOUSE_STATUS_DISABLE)
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
             house.setPublicity(true);

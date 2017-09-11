@@ -6,6 +6,7 @@ import com.dynamicheart.raven.services.generic.RavenEntityServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Service
 public class MoldServiceImpl extends RavenEntityServiceImpl<String, Mold>
@@ -17,5 +18,10 @@ public class MoldServiceImpl extends RavenEntityServiceImpl<String, Mold>
     public MoldServiceImpl(MoldRepository moldRepository) {
         super(moldRepository);
         this.moldRepository = moldRepository;
+    }
+
+    @Override
+    public List<Mold> getAllByTag(String tag) {
+        return moldRepository.findAllByTagsContains(tag);
     }
 }
