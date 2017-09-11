@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/serves")
 public class ServeController {
 
     @Inject
@@ -73,6 +72,7 @@ public class ServeController {
         return new ResponseEntity<>(serve, HttpStatus.CREATED);
     }
 
+
     @RequestMapping(value = "/api/v1/users/{userId}/serves", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
@@ -105,4 +105,5 @@ public class ServeController {
 
         return new ResponseEntity<>(serve, HttpStatus.OK);
     }
+
 }
