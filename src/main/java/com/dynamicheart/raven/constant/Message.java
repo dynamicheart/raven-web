@@ -10,4 +10,5 @@ public class Message {
     public static final String MESSAGE_TEMPLATE_NEW_RAVEN = "%s的信鸦给您带来了一条新的通知";
 
     public static final String MESSAGE_REDUNDANT = "你当前已经拥有该权限";
+    public static final String MESSAGE_USER_DUPLICATE = "该用户名/email/电话号码已被注册";
 }
