@@ -60,10 +60,12 @@ public class UserController {
         User user = createUserFormPopulator.populate(createUserForm);
 
         //check duplicate
-        if(userService.getByName(user.getUsername())!=null
-                ||userService.getByEmail(user.getEmail())!=null
-                ||userService.getByPhoneNumber(user.getPhoneNumber())!=null)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_USER_DUPLICATE));
+        if(userService.getByName(user.getUsername())!=null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_USERNAME_DUPLICATE));
+        if(userService.getByEmail(user.getEmail())!=null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_EMAIL_DUPLICATE));
+        if(userService.getByPhoneNumber(user.getPhoneNumber())!=null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_PHONE_NUM_DUPLICATE));
 
         user = userService.create(user);
 
