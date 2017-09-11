@@ -77,7 +77,8 @@ public class HouseController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
-        if (!house.getPublicity() || memberService.findTopByHouseAndUser(house, currentUser) == null) {
+        //private and not in it
+        if ((!house.getPublicity()) && memberService.findTopByHouseAndUser(house, currentUser) == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
