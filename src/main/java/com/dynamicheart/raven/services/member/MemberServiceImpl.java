@@ -34,6 +34,6 @@ public class MemberServiceImpl extends RavenEntityServiceImpl<String, Member>
 
     @Override
     public List<Member> findByUser(User user) {
-        return memberRepository.findByUser(user);
+        return memberRepository.findByUserId(user.getId());
     }
 }
