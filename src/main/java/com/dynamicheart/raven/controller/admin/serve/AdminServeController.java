@@ -72,7 +72,7 @@ public class AdminServeController {
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
 
         Serve serve=serveService.getById(serveId);
-        if(serve.getType()!=Constants.SERVE_TYPE_ORDINARY)
+        if(serve.getType()!=Constants.SERVE_TYPE_ORDINARY||serve.getStatus()!=Constants.SERVE_STATUS_HANDLING)
             return new ResponseEntity<>(null,HttpStatus.FORBIDDEN);
 
         if(judge.equals("1")) {
