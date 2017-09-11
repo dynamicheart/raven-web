@@ -3,6 +3,8 @@ package com.dynamicheart.raven.controller.admin.serve;
 
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.constant.Constants;
+import com.dynamicheart.raven.controller.admin.serve.field.ServeForm;
+import com.dynamicheart.raven.controller.admin.serve.populator.ServeFormPopulator;
 import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.model.member.Member;
 import com.dynamicheart.raven.model.serve.Serve;
@@ -11,6 +13,7 @@ import com.dynamicheart.raven.services.house.HouseService;
 import com.dynamicheart.raven.services.member.MemberService;
 import com.dynamicheart.raven.services.serve.ServeService;
 import com.dynamicheart.raven.services.user.UserService;
+import com.dynamicheart.raven.utils.exception.ConversionException;
 import com.dynamicheart.raven.utils.exception.ServiceException;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -23,6 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import java.util.List;
+
+/* TODO
+   filter type in search&judge
+    AFTER synchronized with android
+ */
+
 
 @RestController
 @RequestMapping("/admin/api/v1/serves")
@@ -39,21 +48,26 @@ public class AdminServeController {
     @Inject
     private MemberService memberService;
 
-    @RequestMapping(name="allServes", method = RequestMethod.GET)
+    @Inject
+    private ServeFormPopulator serveFormPopulator;
+
+    @RequestMapping(value="allServes", method = RequestMethod.GET)
     @ApiResponses({
             @ApiResponse(code = 200, response = List.class, message = "query all applications")
     })
-    public ResponseEntity<?> allServes(){
+    public ResponseEntity<?> allServes() throws ConversionException {
         List<Serve> serveList=serveService.getAllHandling();
-        return new ResponseEntity<>(serveList, HttpStatus.OK);
+
+        List<ServeForm> serveFormList=serveFormPopulator.populateList(serveList);
+        return new ResponseEntity<>(serveFormList, HttpStatus.OK);
     }
 
 
-    @RequestMapping(name="judgeServe/{serveId}/{judge}", method = RequestMethod.PUT)
+    @RequestMapping(value="judgeServe/{serveId}/{judge}", method = RequestMethod.PUT)
     @ApiResponses({
-            @ApiResponse(code = 200, response = Serve.class, message = "judge an application: 1 for approval, 0 for rejection")
+            @ApiResponse(code = 200, response = ServeForm.class, message = "judge an application: 1 for approval, 0 for rejection")
     })
-    public ResponseEntity<?> judgeServe(@PathVariable String serveId,@PathVariable String judge) throws ServiceException {
+    public ResponseEntity<?> judgeServe(@PathVariable String serveId,@PathVariable String judge) throws ServiceException, ConversionException {
         if(!serveService.exists(serveId))
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
 
@@ -64,15 +78,17 @@ public class AdminServeController {
             User user=userService.getById(serve.getManId());
             Member member=memberService.findTopByHouseAndUser(house,user);
 
-            //NOTE that currently you can only be accepted to be a MAESTER
+            if(member==null||member.getRole()!=Constants.MEMBER_ROLE_LORD)
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
-            member.setRole(Constants.MEMBER_ROLE_MAESTER);
-            memberService.save(member);
+            house.setPublicity(true);
+            houseService.save(house);
         }
         else if(judge.equals("0"))
             serve.setStatus(Constants.SERVE_STATUS_REFUSED);
         serveService.save(serve);
 
-        return new ResponseEntity<>(serve, HttpStatus.OK);
+        ServeForm serveForm=serveFormPopulator.populate(serve);
+        return new ResponseEntity<>(serveForm, HttpStatus.OK);
     }
 }
