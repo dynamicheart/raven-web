@@ -45,16 +45,12 @@ public class HouseController {
     @Inject
     private UpdateHouseFormPopulator updateHouseFormPopulator;
 
-    @RequestMapping(value = "/api/v1/users/{userId}/houses", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/user/houses", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseInfoFields.class, responseContainer = "List", message = "Get all inravens")
     })
-    public ResponseEntity<?> getAll(@PathVariable String userId, @CurrentUser @ApiIgnore User currentUser) throws Exception {
-        if (!userId.equals(currentUser.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
-
+    public ResponseEntity<?> getAll(@CurrentUser @ApiIgnore User currentUser) throws Exception {
         List<Member> members = memberService.findByUser(currentUser);
 
         List<HouseInfoFields> houseInfoFieldsList = new ArrayList<>();
