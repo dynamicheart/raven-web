@@ -15,7 +15,6 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -42,7 +41,7 @@ public class TokenController {
     @ApiResponses({
             @ApiResponse(code = 200, response = AuthenticationModel.class, message = "Login")
     })
-    public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginForm loginForm) {
         User user = userRepository.findTopByUsername(loginForm.getUsername());
         if (user == null || !encoder.matches(loginForm.getUsername(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
