@@ -20,10 +20,10 @@ public class HouseRepositoryTest {
     @Test
     public void Test() {
         House house=new House();
-        String name="myGroup";
+        String name="newGroup";
         house.setName(name);
         house.setCapacity(50);
-        house.setCreatedDate(new Date());
+        //house.setCreatedDate(new Date());
         houseRepository.save(house);
         System.out.println(houseRepository.findAll());
     }

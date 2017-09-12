@@ -63,16 +63,13 @@ public class HouseController {
     }
 
     @RequestMapping(value = "/api/v1/houses/{id}", method = RequestMethod.GET)
-    @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Get house info")
     })
-    public ResponseEntity<?> get(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception {
-        House house = houseService.getById(id);
-        if (house == null) {
+    public ResponseEntity<?> get(@PathVariable String id) throws Exception {
+        if(!houseService.exists(id))
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
-        }
-
+        House house = houseService.getById(id);
         //change:无论公开私密都可以返回
         /*
         if ((!house.getPublicity()) && memberService.findTopByHouseAndUser(house, currentUser) == null) {

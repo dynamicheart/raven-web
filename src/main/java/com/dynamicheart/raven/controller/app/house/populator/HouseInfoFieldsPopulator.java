@@ -2,6 +2,7 @@ package com.dynamicheart.raven.controller.app.house.populator;
 
 import com.dynamicheart.raven.controller.app.house.field.HouseInfoFields;
 import com.dynamicheart.raven.controller.common.AbstractDataPopulator;
+import com.dynamicheart.raven.controller.common.field.UserRefFields;
 import com.dynamicheart.raven.controller.common.populator.MemberRefFieldsListPopulator;
 import com.dynamicheart.raven.controller.common.populator.UserRefFieldsPopulator;
 import com.dynamicheart.raven.model.house.House;
@@ -48,9 +49,12 @@ public class HouseInfoFieldsPopulator extends AbstractDataPopulator<House, House
         houseInfoFields.setTags(house.getTags());
         houseInfoFields.setCreatedDate(house.getCreatedDate());
 
-        User founder = userService.getById(house.getFounderId());
-        if(founder != null){
-            houseInfoFields.setFounder(userRefFieldsPopulator.populate(founder));
+        //bug fix:founderId可能为null
+        if(house.getFounderId()!=null) {
+            User founder = userService.getById(house.getFounderId());
+            if (founder != null) {
+                houseInfoFields.setFounder(userRefFieldsPopulator.populate(founder, new UserRefFields()));
+            }
         }
 
         List<Member> members = memberService.findByHouse(house);
