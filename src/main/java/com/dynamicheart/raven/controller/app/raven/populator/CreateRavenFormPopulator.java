@@ -55,6 +55,9 @@ public class CreateRavenFormPopulator extends AbstractDataPopulator<CreateRavenF
             throw new ConversionException();
         }
 
+        //bug fix: houseId is null
+        raven.setHouseId(createRavenForm.getHouseId());
+        raven.setAttachmentId(createRavenForm.getAttachmentId());
         return raven;
     }
 }
