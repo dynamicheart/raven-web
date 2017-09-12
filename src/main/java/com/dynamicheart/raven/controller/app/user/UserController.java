@@ -4,6 +4,7 @@ import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.constant.Message;
 import com.dynamicheart.raven.controller.app.user.field.CreateUserForm;
+import com.dynamicheart.raven.controller.app.user.field.UpdateInstallationForm;
 import com.dynamicheart.raven.controller.app.user.field.UpdateUserForm;
 import com.dynamicheart.raven.controller.app.user.field.UserInfoFields;
 import com.dynamicheart.raven.controller.app.user.populator.CreateUserFormPopulator;
@@ -107,10 +108,10 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, response = InstallationModel.class, message = "Update installation id")
     })
-    public ResponseEntity<?> postInstallationId(@RequestBody String installationId,
+    public ResponseEntity<?> postInstallationId(@RequestBody UpdateInstallationForm updateInstallationForm,
                                                 @CurrentUser @ApiIgnore User currentUser) throws Exception{
 
-        InstallationModel installation = installationManager.save(currentUser.getId(), installationId);
+        InstallationModel installation = installationManager.save(currentUser.getId(), updateInstallationForm.getInstallationId());
         return new ResponseEntity<>(installation, HttpStatus.OK);
     }
 }
