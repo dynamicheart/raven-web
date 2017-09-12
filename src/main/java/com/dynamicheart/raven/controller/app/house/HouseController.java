@@ -73,9 +73,13 @@ public class HouseController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
-        if (!house.getPublicity() && memberService.findTopByHouseAndUser(house, currentUser) == null) {
+        //change:无论公开私密都可以返回
+        /*
+        if ((!house.getPublicity()) && memberService.findTopByHouseAndUser(house, currentUser) == null) {
+
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
+        */
 
         HouseInfoFields houseInfoFields = houseInfoFieldsPopulator.populate(house);
         return new ResponseEntity<>(houseInfoFields, HttpStatus.OK);
@@ -122,7 +126,7 @@ public class HouseController {
     @RequestMapping(value = "/api/v1/houses/{id}", method = RequestMethod.DELETE)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Update the house")
+            @ApiResponse(code = 200, response = HouseInfoFields.class, message = "delete the house")
     })
     public ResponseEntity<?> delete(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception {
         House house = houseService.getById(id);

@@ -26,6 +26,7 @@ public class ServeServiceImpl extends RavenEntityServiceImpl<String, Serve>
         return serveRepository.findAll();
     }
 
+    //TODO:增加新的tag代表成为公开圈子的申请
     @Override
     public List<Serve> getAllHandlingToPublic() {
         return serveRepository.findAllByStatusAndType(Constants.SERVE_STATUS_HANDLING,Constants.SERVE_TYPE_ORDINARY);
@@ -34,5 +35,10 @@ public class ServeServiceImpl extends RavenEntityServiceImpl<String, Serve>
     @Override
     public List<Serve> getAllByManId(String manId) {
         return serveRepository.findAllByManId(manId);
+    }
+
+    @Override
+    public List<Serve> getAllHandingOrdinaryByHouseId(String houseId) {
+        return serveRepository.findAllByStatusAndTypeAndHouseId(Constants.SERVE_STATUS_HANDLING,Constants.SERVE_TYPE_ORDINARY,houseId);
     }
 }

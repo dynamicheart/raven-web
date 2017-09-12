@@ -22,7 +22,7 @@ public class UpdateUserFormPopulator extends AbstractDataPopulator<UpdateUserFor
         }
 
         if(updateUserForm.getEmail() != null){
-            user.setEmail(updateUserForm.getPhoneNumber());
+            user.setEmail(updateUserForm.getEmail());
         }
 
         if(updateUserForm.getPhoneNumber() != null){

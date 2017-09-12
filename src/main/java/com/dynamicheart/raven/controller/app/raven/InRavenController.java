@@ -35,14 +35,8 @@ public class InRavenController {
     @ApiResponses({
             @ApiResponse(code = 200, response = InRavenInfoFields.class,  responseContainer = "List", message = "Get all inravens")
     })
-    public ResponseEntity<?> getAll(@RequestParam(required = false) Date dateAfter,
-                                    @CurrentUser @ApiIgnore User currentUser) throws Exception {
-        List<Raven> ravens;
-        if (dateAfter == null) {
-            ravens = ravenService.findByAddresseeId(currentUser.getId());
-        } else {
-            ravens = ravenService.findByAddresseeIdAndCreatedDateAfter(currentUser.getId(), dateAfter);
-        }
+    public ResponseEntity<?> getAll(@CurrentUser @ApiIgnore User currentUser) throws Exception {
+        List<Raven> ravens = ravenService.findByAddresseeId(currentUser.getId());
 
         List<InRavenInfoFields> inRavenInfoFieldsList = new ArrayList<>();
         for(Raven raven: ravens){
