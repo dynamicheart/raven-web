@@ -157,9 +157,10 @@ public class MemberController {
     @ApiResponses({
             @ApiResponse(code = 200, response = MemberInfoFields.class, message = "Update the role of member")
     })
+    //changes:requestbody or requestparam
     public ResponseEntity<?> put(@PathVariable String houseId,
                           @PathVariable String userId,
-                          @RequestBody Integer role,
+                          @RequestParam Integer role,
                           @CurrentUser @ApiIgnore User currentUser) throws Exception{
         House house = houseService.getById(houseId);
         User user = userService.getById(userId);
