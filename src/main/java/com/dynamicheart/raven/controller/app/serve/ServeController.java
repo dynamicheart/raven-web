@@ -161,7 +161,7 @@ public class ServeController {
             member.setHouse(house);
             member.setRole(Constants.MEMBER_ROLE_ORDINARY);
             memberService.save(member);
-            
+
             house.setMemberNumbers(house.getMemberNumbers()+1);
             houseService.save(house);
         }
