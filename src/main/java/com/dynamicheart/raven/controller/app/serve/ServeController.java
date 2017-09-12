@@ -18,6 +18,7 @@ import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.services.house.HouseService;
 import com.dynamicheart.raven.services.member.MemberService;
 import com.dynamicheart.raven.services.serve.ServeService;
+import com.dynamicheart.raven.services.user.UserService;
 import com.sun.org.apache.regexp.internal.RE;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -43,6 +44,9 @@ public class ServeController {
     private HouseService houseService;
 
     @Inject
+    private UserService userService;
+
+    @Inject
     private CreateServeFormPopulator createServeFormPopulator;
 
     @RequestMapping(value = "/api/v1/serves", method = RequestMethod.POST)
@@ -53,12 +57,13 @@ public class ServeController {
     public ResponseEntity<?> post(@RequestParam CreateServeForm createServeForm, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         Serve serve=createServeFormPopulator.populate(createServeForm);
         House house=houseService.getById(serve.getManId());
+
         Member member=memberService.findTopByHouseAndUser(house,currentUser);
 
         Integer type=serve.getType();
         if(type.equals(Constants.SERVE_TYPE_ORDINARY)){
-            if(!member.getRole().equals(Constants.MEMBER_ROLE_LORD))
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
+            if(member!=null)
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_REDUNDANT));
         }
 
         if(type.equals(Constants.MEMBER_ROLE_MAESTER)&&serve.getType().equals(Constants.SERVE_TYPE_MAESTER))
@@ -91,7 +96,7 @@ public class ServeController {
     @RequestMapping(value = "/api/v1/serves/{serveId}", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = Serve.class, message = "Get one raven")
+            @ApiResponse(code = 200, response = Serve.class, message = "Get one serve")
     })
     public ResponseEntity<?> get(@PathVariable String serveId, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         Serve serve = serveService.getById(serveId);
@@ -106,4 +111,64 @@ public class ServeController {
         return new ResponseEntity<>(serve, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/api/v1/serves/{houseId}", method = RequestMethod.GET)
+    @Authorization
+    @ApiResponses({
+            @ApiResponse(code = 200, response = Serve.class, responseContainer = "List", message = "Get available serve in one house")
+    })
+    public ResponseEntity<?> getByHouse(@PathVariable String houseId, @CurrentUser @ApiIgnore User currentUser) throws Exception{
+        if(!houseService.exists(houseId))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
+
+        House house=houseService.getById(houseId);
+        Member member=memberService.findTopByHouseAndUser(house,currentUser);
+
+        if(member==null||!(member.getRole().equals(Constants.MEMBER_ROLE_LORD)))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
+
+        List<Serve> serveList=serveService.getAllHandingOrdinaryByHouseId(houseId);
+
+        return new ResponseEntity<>(serveList, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/api/v1/serves/{serveId}/{judge}", method = RequestMethod.PUT)
+    @Authorization
+    @ApiResponses({
+            @ApiResponse(code = 200, response = Serve.class, message = "accept or reject one serve")
+    })
+    public ResponseEntity<?> judgeServe(@PathVariable String serveId,@PathVariable String judge, @CurrentUser @ApiIgnore User currentUser) throws Exception{
+        if(!serveService.exists(serveId))
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
+
+        Serve serve=serveService.getById(serveId);
+        if(serve.getType()!=Constants.SERVE_TYPE_ORDINARY||serve.getStatus()!=Constants.SERVE_STATUS_HANDLING)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
+
+        if(judge.equals("1")) {
+            House house=houseService.getById(serve.getHouseId());
+            User user=userService.getById(serve.getManId());
+
+            if(house==null||user==null||user.getStatus().equals(Constants.USER_STATUS_DISABLE))
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
+
+            Member curMember=memberService.findTopByHouseAndUser(house,currentUser);
+            if(currentUser.getStatus().equals(Constants.USER_STATUS_DISABLE)||curMember==null||!curMember.getRole().equals(Constants.MEMBER_ROLE_LORD))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
+
+            serve.setStatus(Constants.SERVE_STATUS_ACCEPTED);
+            Member member=new Member();
+            member.setUser(user);
+            member.setHouse(house);
+            member.setRole(Constants.MEMBER_ROLE_ORDINARY);
+            memberService.save(member);
+            
+            house.setMemberNumbers(house.getMemberNumbers()+1);
+            houseService.save(house);
+        }
+        else if(judge.equals("0"))
+            serve.setStatus(Constants.SERVE_STATUS_REFUSED);
+        serveService.save(serve);
+
+        return new ResponseEntity<>(serve, HttpStatus.OK);
+    }
 }
