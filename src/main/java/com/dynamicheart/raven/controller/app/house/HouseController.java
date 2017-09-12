@@ -91,6 +91,9 @@ public class HouseController {
         House house = createHouseFormPopulator.populate(createHouseForm);
         house = houseService.create(house, currentUser);
 
+        //bug fix:change house member count
+        house.setMemberNumbers(1);
+        houseService.save(house);
         HouseInfoFields houseInfoFields = houseInfoFieldsPopulator.populate(house);
 
         return new ResponseEntity<>(houseInfoFields, HttpStatus.CREATED);
