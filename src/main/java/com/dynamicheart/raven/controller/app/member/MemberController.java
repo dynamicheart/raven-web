@@ -43,7 +43,7 @@ public class MemberController {
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = MemberInfoFields.class, message = "Get member info")
+            @ApiResponse(code = 200, response = MemberInfoFields.class, message = "Get specific member info")
     })
     public ResponseEntity<?> get(@PathVariable String houseId,
                           @PathVariable String userId,
@@ -70,10 +70,11 @@ public class MemberController {
         return new ResponseEntity<>(memberInfoFields, HttpStatus.OK);
     }
 
+
     @RequestMapping(method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = MemberInfoFields.class, responseContainer = "List", message = "Get member info")
+            @ApiResponse(code = 200, response = MemberInfoFields.class, responseContainer = "List", message = "Get all member info in a house")
     })
     public ResponseEntity<?> getAll(@PathVariable String houseId,
                                  @CurrentUser @ApiIgnore User currentUser) throws Exception {
