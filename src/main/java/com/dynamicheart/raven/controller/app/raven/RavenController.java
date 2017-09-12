@@ -17,6 +17,7 @@ import com.dynamicheart.raven.leancloud.service.LeanCloudService;
 import com.dynamicheart.raven.services.house.HouseService;
 import com.dynamicheart.raven.services.member.MemberService;
 import com.dynamicheart.raven.services.raven.RavenService;
+import com.dynamicheart.raven.utils.exception.ServiceException;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
@@ -99,7 +100,12 @@ public class RavenController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
-        leanCloudService.send(raven, currentUser);
+        //feature:检测通知发送情况
+        try {
+            leanCloudService.send(raven, currentUser);
+        }catch(ServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_LEANCLOUD_ERROR));
+        }
         raven = ravenService.save(raven);
         RavenInfoFields ravenInfoFields = ravenInfoFieldsPopulator.populate(raven);
 
