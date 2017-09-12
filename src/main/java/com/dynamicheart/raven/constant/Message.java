@@ -13,4 +13,5 @@ public class Message {
     public static final String MESSAGE_USERNAME_DUPLICATE = "该用户名已被注册";
     public static final String MESSAGE_EMAIL_DUPLICATE ="该email已被注册";
     public static final String MESSAGE_PHONE_NUM_DUPLICATE = "该电话号码已被注册";
+    public static final String MESSAGE_MEMBER_DUPLICATE = "该用户已在通知组中";
 }
