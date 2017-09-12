@@ -43,7 +43,7 @@ public class TokenController {
     })
     public ResponseEntity<?> login(@RequestBody @Valid LoginForm loginForm) {
         User user = userRepository.findTopByUsername(loginForm.getUsername());
-        if (user == null || !encoder.matches(loginForm.getUsername(), user.getPassword())) {
+        if (user == null || !encoder.matches(loginForm.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
