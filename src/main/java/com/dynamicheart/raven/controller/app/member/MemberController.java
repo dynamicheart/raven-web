@@ -101,21 +101,25 @@ public class MemberController {
     }
 
 
+    //change:加入公开圈子
     @RequestMapping(method = RequestMethod.POST)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = MemberInfoFields.class, message = "Add a member")
+            @ApiResponse(code = 200, response = MemberInfoFields.class, message = "enter a public group")
     })
     public ResponseEntity<?> post(@PathVariable String houseId,
-                           @RequestBody String userId,
                            @CurrentUser @ApiIgnore User currentUser) throws Exception{
 
         House house = houseService.getById(houseId);
-        if (house == null) {
+        //house被禁用时无法加入
+        if (house == null||house.getStatus().equals(Constants.HOUSE_STATUS_DISABLE)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
         Member currentUserMember = memberService.findTopByHouseAndUser(house, currentUser);
+
+        //并非添加用户，而是自己加入，且加入公开圈子无需验证
+        /*
         if (currentUserMember == null || !currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
@@ -124,14 +128,19 @@ public class MemberController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
+
         //bug fix: 不应该看当前用户有没有在通知组内，而应该看目标用户有没有
         if (memberService.findTopByHouseAndUser(house, user) != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GenericResponseBody(Message.MESSAGE_MEMBER_DUPLICATE));
-        }
+        }*/
+
+        if(currentUserMember!=null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_REDUNDANT));
 
         Member member = new Member();
         member.setHouse(house);
-        member.setUser(user);
+        member.setUser(currentUser);
+        member.setRole(Constants.MEMBER_ROLE_ORDINARY);
 
         member = memberService.create(member);
         //bug fix:正确计算house member count

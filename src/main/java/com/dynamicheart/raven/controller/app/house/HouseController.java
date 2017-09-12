@@ -73,10 +73,13 @@ public class HouseController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
+        //change:无论公开私密都可以返回
+        /*
         if ((!house.getPublicity()) && memberService.findTopByHouseAndUser(house, currentUser) == null) {
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
+        */
 
         HouseInfoFields houseInfoFields = houseInfoFieldsPopulator.populate(house);
         return new ResponseEntity<>(houseInfoFields, HttpStatus.OK);
