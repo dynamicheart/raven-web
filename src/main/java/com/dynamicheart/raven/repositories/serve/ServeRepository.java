@@ -13,4 +13,6 @@ public interface ServeRepository extends MongoRepository<Serve, String> {
     List<Serve> findAllByStatusAndType(int status,int type);
 
     List<Serve> findAllByManId(String manId);
+
+    List<Serve> findAllByStatusAndTypeAndHouseId(int status,int type,String houseId);
 }

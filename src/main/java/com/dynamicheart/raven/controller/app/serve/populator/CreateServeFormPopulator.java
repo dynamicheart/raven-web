@@ -43,13 +43,6 @@ public class CreateServeFormPopulator extends AbstractDataPopulator<CreateServeF
                 !types.contains(createServeForm.getType()))
             throw new ConversionException();
 
-        User user=userService.getById(createServeForm.getManId());
-        House house=houseService.getById(createServeForm.getHouseId());
-        Member member=memberService.findTopByHouseAndUser(house,user);
-
-        if(member==null)
-            throw new ConversionException();
-
         serve.setManId(createServeForm.getManId());
         serve.setHouseId(createServeForm.getHouseId());
         serve.setContent(createServeForm.getContent());
