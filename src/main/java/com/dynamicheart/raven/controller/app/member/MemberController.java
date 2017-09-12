@@ -243,4 +243,31 @@ public class MemberController {
 
         return new ResponseEntity<>(memberInfoFields, HttpStatus.OK);
     }
+
+    @RequestMapping(method = RequestMethod.DELETE)
+    @Authorization
+    @ApiResponses({
+            @ApiResponse(code = 200, response = MemberInfoFields.class, message = "leave a house")
+    })
+    public ResponseEntity<?> delete(@PathVariable String houseId,@CurrentUser @ApiIgnore User currentUser) throws Exception {
+        House house = houseService.getById(houseId);
+        if (house == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
+        }
+
+        Member currentUserMember = memberService.findTopByHouseAndUser(house, currentUser);
+        if(currentUserMember==null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
+        if(currentUserMember.getRole().equals(Constants.MEMBER_ROLE_LORD))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
+
+        memberService.delete(currentUserMember);
+
+        house.setMemberNumbers(house.getMemberNumbers() - 1);
+        houseService.save(house);
+
+        MemberInfoFields memberInfoFields = memberInfoFieldsPopulator.populate(currentUserMember);
+
+        return new ResponseEntity<>(memberInfoFields, HttpStatus.OK);
+    }
 }

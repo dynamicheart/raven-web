@@ -14,4 +14,7 @@ public class Message {
     public static final String MESSAGE_EMAIL_DUPLICATE ="该email已被注册";
     public static final String MESSAGE_PHONE_NUM_DUPLICATE = "该电话号码已被注册";
     public static final String MESSAGE_MEMBER_DUPLICATE = "该用户已在通知组中";
+
+    public static final String MESSAGE_LEANCLOUD_ERROR = "通知在发送中出现了一些问题";
+
 }
