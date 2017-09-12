@@ -90,7 +90,8 @@ public class RavenController {
     @ApiResponses({
             @ApiResponse(code = 200, response = RavenInfoFields.class, message = "Create a new raven")
     })
-    public ResponseEntity<?> post(@RequestParam CreateRavenForm createRavenForm, @CurrentUser @ApiIgnore User currentUser) throws Exception{
+    //changes:requestparam or requestbody
+    public ResponseEntity<?> post(@RequestBody CreateRavenForm createRavenForm, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         Raven raven = createRavenFormPopulator.populate(createRavenForm);
         House house = houseService.getById(raven.getHouseId());
         Member member = memberService.findTopByHouseAndUser(house, currentUser);
