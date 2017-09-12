@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/houses/{houseId}/members")
@@ -51,7 +53,12 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
 
-        Member member = memberService.findTopByHouseAndUser(house, currentUser);
+        //bug fix:应该能查看任意成员
+        User user=userService.getById(userId);
+        if(user==null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
+
+        Member member = memberService.findTopByHouseAndUser(house, user);
 
         //bug fix
         if (!house.getPublicity() && member == null) {
@@ -62,6 +69,36 @@ public class MemberController {
 
         return new ResponseEntity<>(memberInfoFields, HttpStatus.OK);
     }
+
+    @RequestMapping(method = RequestMethod.GET)
+    @Authorization
+    @ApiResponses({
+            @ApiResponse(code = 200, response = MemberInfoFields.class, responseContainer = "List", message = "Get member info")
+    })
+    public ResponseEntity<?> getAll(@PathVariable String houseId,
+                                 @CurrentUser @ApiIgnore User currentUser) throws Exception {
+        House house = houseService.getById(houseId);
+        if (house == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
+        }
+
+        //当前用户不在组内，且为私密组时不给反馈
+        Member curMember = memberService.findTopByHouseAndUser(house, currentUser);
+
+        if (!house.getPublicity() && curMember == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
+        }
+
+
+        List<Member> memberList=memberService.findByHouse(house);
+
+        List<MemberInfoFields> memberInfoFieldsList=new ArrayList<>();
+        for(Member member:memberList)
+            memberInfoFieldsList.add(memberInfoFieldsPopulator.populate(member));
+
+        return new ResponseEntity<>(memberInfoFieldsList, HttpStatus.OK);
+    }
+
 
     @RequestMapping(method = RequestMethod.POST)
     @Authorization
@@ -96,6 +133,9 @@ public class MemberController {
         member.setUser(user);
 
         member = memberService.create(member);
+        //bug fix:正确计算house member count
+        house.setMemberNumbers(house.getMemberNumbers()+1);
+        houseService.save(house);
 
         MemberInfoFields memberInfoFields = memberInfoFieldsPopulator.populate(member);
 
@@ -122,11 +162,17 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
+        //不能更改自己的权限
         if(userId.equals(currentUser.getId())){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
         Member member = memberService.findTopByHouseAndUser(house, user);
+
+        //增加对成员是否存在的检查
+        if(member==null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Message.MESSAGE_NOT_FOUND);
+
 
         if(role.equals(Constants.MEMBER_ROLE_LORD)){
             member.setRole(Constants.MEMBER_ROLE_LORD);
@@ -162,15 +208,24 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
-        Member member = memberService.findTopByHouseAndUser(house, currentUser);
+        //bug fix:应该可以删除任意成员
+        User user=userService.getById(userId);
+        if(user==null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
+
+        Member member = memberService.findTopByHouseAndUser(house, user);
         if (member == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
+        //feature:不允许删除圈主
+        if(member.getRole().equals(Constants.MEMBER_ROLE_LORD))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
 
         memberService.delete(member);
 
-        //TODO inconsistent
+        //那是因为你没有save house啊……
         house.setMemberNumbers(house.getMemberNumbers() - 1);
+        houseService.save(house);
 
         MemberInfoFields memberInfoFields = memberInfoFieldsPopulator.populate(member);
 
