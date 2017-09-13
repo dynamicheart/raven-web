@@ -26,6 +26,10 @@ public class CreateRavenForm {
 
     private String moldId;
 
+    public Boolean getMold() {
+        return mold;
+    }
+
     public String getHouseId() {
         return houseId;
     }
