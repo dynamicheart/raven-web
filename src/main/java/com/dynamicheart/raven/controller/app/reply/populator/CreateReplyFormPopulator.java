@@ -4,7 +4,9 @@ import com.dynamicheart.raven.controller.app.reply.field.CreateReplyForm;
 import com.dynamicheart.raven.controller.common.AbstractDataPopulator;
 import com.dynamicheart.raven.model.reply.Reply;
 import com.dynamicheart.raven.utils.exception.ConversionException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CreateReplyFormPopulator extends AbstractDataPopulator<CreateReplyForm,Reply>{
     @Override
     protected Reply createTarget() {

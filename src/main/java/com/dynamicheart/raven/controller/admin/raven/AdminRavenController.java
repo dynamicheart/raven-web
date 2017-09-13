@@ -1,5 +1,6 @@
 package com.dynamicheart.raven.controller.admin.raven;
 
+import com.dynamicheart.raven.authorization.annotation.AdminAuthorization;
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.controller.admin.raven.field.RavenForm;
 import com.dynamicheart.raven.controller.admin.raven.populator.RavenFormPopulator;
@@ -38,6 +39,7 @@ public class AdminRavenController {
     private RavenFormPopulator ravenFormPopulator;
 
     @RequestMapping(value = "searchByAddresser/{userId}", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = List.class, message = "Get ravens by sender id")
     })
@@ -52,6 +54,7 @@ public class AdminRavenController {
     }
 
     @RequestMapping(value = "searchByDescription/{content}", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = List.class, message = "Get ravens by content")
     })
@@ -66,6 +69,7 @@ public class AdminRavenController {
     }
 
     @RequestMapping(value = "searchByHouse/{houseId}", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = List.class, message = "Get ravens by group id")
     })
@@ -80,6 +84,7 @@ public class AdminRavenController {
     }
 
     @RequestMapping(value = "allRavens", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = List.class, message = "Get ravens")
     })
@@ -92,6 +97,7 @@ public class AdminRavenController {
     }
 
     @RequestMapping(value = "getById/{ravenId}", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = RavenForm.class, message = "get raven by id")
     })
@@ -106,6 +112,7 @@ public class AdminRavenController {
     }
 
     @RequestMapping(value = "deleteRaven/{ravenId}", method = RequestMethod.DELETE)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = RavenForm.class, message = "delete notification")
     })
