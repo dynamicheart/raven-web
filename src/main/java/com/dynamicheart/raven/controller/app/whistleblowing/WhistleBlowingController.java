@@ -48,6 +48,8 @@ public class WhistleBlowingController {
         }
 
         whistleBlowing.setStatus(Constants.WHISTLE_BLOWING_STATUS_HANDLING);
+        //bug fix:给举报用户赋值
+        whistleBlowing.setWhistleblowerId(currentUser.getId());
         whistleBlowingService.save(whistleBlowing);
 
         return new ResponseEntity<>(whistleBlowing, HttpStatus.CREATED);
