@@ -100,13 +100,14 @@ public class RavenController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
+        raven = ravenService.save(raven);
         //feature:检测通知发送情况
         try {
             leanCloudService.send(raven, currentUser);
         }catch(ServiceException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_LEANCLOUD_ERROR));
         }
-        raven = ravenService.save(raven);
+
         RavenInfoFields ravenInfoFields = ravenInfoFieldsPopulator.populate(raven);
 
         return new ResponseEntity<>(ravenInfoFields, HttpStatus.CREATED);
