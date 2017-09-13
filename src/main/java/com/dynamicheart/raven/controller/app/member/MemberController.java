@@ -157,9 +157,11 @@ public class MemberController {
     @ApiResponses({
             @ApiResponse(code = 200, response = MemberInfoFields.class, message = "Update the role of member")
     })
+    //changes:requestbody or requestparam
+    //changes:integer or int
     public ResponseEntity<?> put(@PathVariable String houseId,
                           @PathVariable String userId,
-                          @RequestBody Integer role,
+                          @RequestParam int role,
                           @CurrentUser @ApiIgnore User currentUser) throws Exception{
         House house = houseService.getById(houseId);
         User user = userService.getById(userId);
@@ -184,7 +186,7 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Message.MESSAGE_NOT_FOUND);
 
 
-        if(role.equals(Constants.MEMBER_ROLE_LORD)){
+        if(role==Constants.MEMBER_ROLE_LORD){
             member.setRole(Constants.MEMBER_ROLE_LORD);
             currentUserMember.setRole(Constants.MEMBER_ROLE_ORDINARY);
             memberService.save(currentUserMember);

@@ -8,6 +8,7 @@ import com.dynamicheart.raven.controller.admin.house.populator.HouseDetailFormPo
 import com.dynamicheart.raven.controller.admin.user.field.UserBriefInfo;
 import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.model.member.Member;
+import com.dynamicheart.raven.model.user.User;
 import com.dynamicheart.raven.services.house.HouseService;
 import com.dynamicheart.raven.services.member.MemberService;
 import io.swagger.annotations.ApiResponse;
@@ -68,12 +69,18 @@ public class AdminHouseController {
         if(!houseService.exists(id))
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
 
+
         House house=houseService.getById(id);
         List<Member> memberList=memberService.findByHouse(house);
 
+        //bug fix:equals代替==
+        //bug fix:user可能为null
         for(Member member:memberList)
-            if(member.getRole()== Constants.MEMBER_ROLE_LORD)
-                master=member.getUser().getUsername();
+            if(member.getRole().equals(Constants.MEMBER_ROLE_LORD)) {
+                User masterUser=member.getUser();
+                if(masterUser!=null)
+                    master = masterUser.getUsername();
+            }
 
         HouseDetailForm houseDetailForm=new HouseDetailForm();
         houseDetailFormPopulator.populate(house,houseDetailForm,master);

@@ -11,10 +11,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.inject.Inject;
@@ -31,7 +28,8 @@ public class WhistleBlowingController {
     @ApiResponses({
             @ApiResponse(code = 201, response = WhistleBlowing.class, message = "Create a new whistleblowing")
     })
-    public ResponseEntity<?> post(@CurrentUser @ApiIgnore User currentUser, @RequestBody String ravenId){
+    //changes:requestbody or requestparam?
+    public ResponseEntity<?> post(@CurrentUser @ApiIgnore User currentUser, @RequestParam String ravenId){
         if(!ravenService.exists(ravenId)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }

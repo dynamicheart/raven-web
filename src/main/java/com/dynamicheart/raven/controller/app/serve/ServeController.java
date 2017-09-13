@@ -54,7 +54,9 @@ public class ServeController {
     @ApiResponses({
             @ApiResponse(code = 200, response = Serve.class, message = "Create a new serve")
     })
-    public ResponseEntity<?> post(@RequestParam CreateServeForm createServeForm, @CurrentUser @ApiIgnore User currentUser) throws Exception{
+
+    //changes:requestparam和requestbody的区别？
+    public ResponseEntity<?> post(@RequestBody CreateServeForm createServeForm, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         Serve serve=createServeFormPopulator.populate(createServeForm);
         House house=houseService.getById(serve.getManId());
 
