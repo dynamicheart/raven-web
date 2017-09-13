@@ -10,21 +10,14 @@ public class PushModelData implements Serializable{
 
     private static final long serialVersionUID = 4989733451384168740L;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String alert;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String title;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String action;
 
-    @JsonProperty("custom-key")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String customKey;
+    private String ravenId;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Boolean silent;
 
     public String getAlert() {
         return alert;
@@ -50,19 +43,11 @@ public class PushModelData implements Serializable{
         this.action = action;
     }
 
-    public String getCustomKey() {
-        return customKey;
+    public String getRavenId() {
+        return ravenId;
     }
 
-    public void setCustomKey(String customKey) {
-        this.customKey = customKey;
-    }
-
-    public Boolean getSilent() {
-        return silent;
-    }
-
-    public void setSilent(Boolean silent) {
-        this.silent = silent;
+    public void setRavenId(String ravenId) {
+        this.ravenId = ravenId;
     }
 }
