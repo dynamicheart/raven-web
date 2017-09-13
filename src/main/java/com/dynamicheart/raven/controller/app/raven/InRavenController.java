@@ -51,8 +51,9 @@ public class InRavenController {
     @ApiResponses({
             @ApiResponse(code = 200, response = InRavenInfoFields.class, message = "Get one inraven")
     })
+    //change in hope of something will be different
     public ResponseEntity<?> get(@PathVariable String ravenId, @CurrentUser @ApiIgnore User currentUser) throws Exception {
-        Raven raven = ravenService.getById(ravenId);
+        Raven raven = ravenService.findById(ravenId);
         if(raven == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
