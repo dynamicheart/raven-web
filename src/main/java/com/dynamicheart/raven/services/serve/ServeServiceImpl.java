@@ -26,10 +26,9 @@ public class ServeServiceImpl extends RavenEntityServiceImpl<String, Serve>
         return serveRepository.findAll();
     }
 
-    //TODO:增加新的tag代表成为公开圈子的申请
     @Override
     public List<Serve> getAllHandlingToPublic() {
-        return serveRepository.findAllByStatusAndType(Constants.SERVE_STATUS_HANDLING,Constants.SERVE_TYPE_ORDINARY);
+        return serveRepository.findAllByStatusAndType(Constants.SERVE_STATUS_HANDLING,Constants.SERVE_TYPE_PUBLIC);
     }
 
     @Override

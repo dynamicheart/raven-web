@@ -36,7 +36,7 @@ public class CreateServeFormPopulator extends AbstractDataPopulator<CreateServeF
 
     @Override
     public Serve populate(CreateServeForm createServeForm, Serve serve) throws ConversionException {
-        List<Integer> types= Arrays.asList(Constants.SERVE_TYPE_ORDINARY,Constants.SERVE_TYPE_MAESTER,Constants.SERVE_TYPE_LORD);
+        List<Integer> types= Arrays.asList(Constants.SERVE_TYPE_ORDINARY,Constants.SERVE_TYPE_MAESTER,Constants.SERVE_TYPE_LORD,Constants.SERVE_TYPE_PUBLIC);
 
         if(!userService.exists(createServeForm.getManId())||
                 !houseService.exists(createServeForm.getHouseId())||
