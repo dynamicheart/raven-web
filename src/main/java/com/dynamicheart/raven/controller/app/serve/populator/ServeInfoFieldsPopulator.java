@@ -44,7 +44,7 @@ public class ServeInfoFieldsPopulator extends AbstractDataPopulator<Serve,ServeI
                 userRefFields.setId(user.getId());
                 userRefFields.setUsername(user.getUsername());
 
-                serveInfoFields.setUserRefFields(userRefFields);
+                serveInfoFields.setMan(userRefFields);
             }
         }
 
@@ -56,7 +56,7 @@ public class ServeInfoFieldsPopulator extends AbstractDataPopulator<Serve,ServeI
                 houseRefFields.setName(house.getName());
                 houseRefFields.setSigil(house.getSigil());
 
-                serveInfoFields.setHouseRefFields(houseRefFields);
+                serveInfoFields.setHouse(houseRefFields);
             }
         }
 

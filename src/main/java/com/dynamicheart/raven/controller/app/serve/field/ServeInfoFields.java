@@ -5,22 +5,22 @@ import com.dynamicheart.raven.controller.common.field.UserRefFields;
 import com.dynamicheart.raven.model.serve.Serve;
 
 public class ServeInfoFields extends Serve {
-    private UserRefFields userRefFields;
-    private HouseRefFields houseRefFields;
+    private UserRefFields man;
+    private HouseRefFields house;
 
-    public UserRefFields getUserRefFields() {
-        return userRefFields;
+    public UserRefFields getMan() {
+        return man;
     }
 
-    public void setUserRefFields(UserRefFields userRefFields) {
-        this.userRefFields = userRefFields;
+    public void setMan(UserRefFields man) {
+        this.man = man;
     }
 
-    public HouseRefFields getHouseRefFields() {
-        return houseRefFields;
+    public HouseRefFields getHouse() {
+        return house;
     }
 
-    public void setHouseRefFields(HouseRefFields houseRefFields) {
-        this.houseRefFields = houseRefFields;
+    public void setHouse(HouseRefFields house) {
+        this.house = house;
     }
 }
