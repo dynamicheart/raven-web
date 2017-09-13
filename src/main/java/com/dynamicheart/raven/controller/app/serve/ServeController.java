@@ -123,7 +123,8 @@ public class ServeController {
         return new ResponseEntity<>(serveInfoFields, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/api/v1/serves/{houseId}", method = RequestMethod.GET)
+    //changes:url change
+    @RequestMapping(value = "/api/v1/houses/{houseId}/serves", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = ServeInfoFields.class, responseContainer = "List", message = "Get available serve in one house")
