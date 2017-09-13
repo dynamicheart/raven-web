@@ -62,22 +62,40 @@ public class ServeController {
     //changes:requestparam和requestbody的区别？
     public ResponseEntity<?> post(@RequestBody CreateServeForm createServeForm, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         Serve serve=createServeFormPopulator.populate(createServeForm);
-        House house=houseService.getById(serve.getManId());
+        House house=houseService.getActiveById(serve.getHouseId());
+
+        if(house==null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
+
+        if(currentUser.getStatus().equals(Constants.USER_STATUS_DISABLE))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
 
         Member member=memberService.findTopByHouseAndUser(house,currentUser);
-
         Integer type=serve.getType();
+
         if(type.equals(Constants.SERVE_TYPE_ORDINARY)){
             if(member!=null)
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_REDUNDANT));
         }
 
-        if(type.equals(Constants.MEMBER_ROLE_MAESTER)&&serve.getType().equals(Constants.SERVE_TYPE_MAESTER))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_REDUNDANT));
+        if(member==null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
 
-        if(type.equals(Constants.MEMBER_ROLE_LORD)&&serve.getType().equals(Constants.SERVE_TYPE_LORD))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_REDUNDANT));
+        if(type.equals(Constants.SERVE_TYPE_MAESTER)) {
+            if(member.getRole().equals(Constants.MEMBER_ROLE_MAESTER))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_REDUNDANT));
+        }
 
+        if(type.equals(Constants.SERVE_TYPE_LORD)) {
+            if(member.getRole().equals(Constants.MEMBER_ROLE_LORD))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_REDUNDANT));
+        }
+
+        if(type.equals(Constants.SERVE_TYPE_PUBLIC)){
+            if(!member.getRole().equals(Constants.MEMBER_ROLE_LORD))
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
+
+        }
         serveService.save(serve);
 
         ServeInfoFields serveInfoFields=serveInfoFieldsPopulator.populate(serve);

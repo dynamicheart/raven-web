@@ -36,6 +36,7 @@ public class Constants {
     public static final Integer SERVE_TYPE_ORDINARY = 0;
     public static final Integer SERVE_TYPE_MAESTER = 1;
     public static final Integer SERVE_TYPE_LORD = 2;
+    public static final Integer SERVE_TYPE_PUBLIC=3;
 
     public static final Integer MEMBER_ROLE_ORDINARY = 0;
     public static final Integer MEMBER_ROLE_MAESTER = 1;
