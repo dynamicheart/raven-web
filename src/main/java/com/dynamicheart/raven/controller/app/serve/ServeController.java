@@ -9,6 +9,7 @@ import com.dynamicheart.raven.controller.app.raven.field.RavenInfoFields;
 import com.dynamicheart.raven.controller.app.serve.field.CreateServeForm;
 import com.dynamicheart.raven.controller.app.serve.field.ServeInfoFields;
 import com.dynamicheart.raven.controller.app.serve.populator.CreateServeFormPopulator;
+import com.dynamicheart.raven.controller.app.serve.populator.ServeInfoFieldsPopulator;
 import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
 import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.model.member.Member;
@@ -49,10 +50,13 @@ public class ServeController {
     @Inject
     private CreateServeFormPopulator createServeFormPopulator;
 
+    @Inject
+    private ServeInfoFieldsPopulator serveInfoFieldsPopulator;
+
     @RequestMapping(value = "/api/v1/serves", method = RequestMethod.POST)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = Serve.class, message = "Create a new serve")
+            @ApiResponse(code = 200, response = ServeInfoFields.class, message = "Create a new serve")
     })
 
     //changes:requestparam和requestbody的区别？
@@ -76,14 +80,15 @@ public class ServeController {
 
         serveService.save(serve);
 
-        return new ResponseEntity<>(serve, HttpStatus.CREATED);
+        ServeInfoFields serveInfoFields=serveInfoFieldsPopulator.populate(serve);
+        return new ResponseEntity<>(serveInfoFields, HttpStatus.CREATED);
     }
 
 
     @RequestMapping(value = "/api/v1/users/{userId}/serves", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = Serve.class,  responseContainer = "List", message = "Get all serves")
+            @ApiResponse(code = 200, response = ServeInfoFields.class,  responseContainer = "List", message = "Get all serves")
     })
     public ResponseEntity<?> getAll(@PathVariable String userId, @CurrentUser @ApiIgnore User currentUser)throws Exception{
         if (!currentUser.getId().equals(userId)) {
@@ -92,13 +97,17 @@ public class ServeController {
 
         List<Serve> serveList=serveService.getAllByManId(userId);
 
-        return new ResponseEntity<>(serveList,HttpStatus.OK);
+        List<ServeInfoFields> serveInfoFieldsList=new ArrayList<>();
+        for(Serve serve:serveList)
+            serveInfoFieldsList.add(serveInfoFieldsPopulator.populate(serve));
+
+        return new ResponseEntity<>(serveInfoFieldsList,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/v1/serves/{serveId}", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = Serve.class, message = "Get one serve")
+            @ApiResponse(code = 200, response = ServeInfoFields.class, message = "Get one serve")
     })
     public ResponseEntity<?> get(@PathVariable String serveId, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         Serve serve = serveService.getById(serveId);
@@ -110,13 +119,14 @@ public class ServeController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
-        return new ResponseEntity<>(serve, HttpStatus.OK);
+        ServeInfoFields serveInfoFields=serveInfoFieldsPopulator.populate(serve);
+        return new ResponseEntity<>(serveInfoFields, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/v1/serves/{houseId}", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = Serve.class, responseContainer = "List", message = "Get available serve in one house")
+            @ApiResponse(code = 200, response = ServeInfoFields.class, responseContainer = "List", message = "Get available serve in one house")
     })
     public ResponseEntity<?> getByHouse(@PathVariable String houseId, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if(!houseService.exists(houseId))
@@ -130,13 +140,16 @@ public class ServeController {
 
         List<Serve> serveList=serveService.getAllHandingOrdinaryByHouseId(houseId);
 
-        return new ResponseEntity<>(serveList, HttpStatus.OK);
+        List<ServeInfoFields> serveInfoFieldsList=new ArrayList<>();
+        for(Serve serve:serveList)
+            serveInfoFieldsList.add(serveInfoFieldsPopulator.populate(serve));
+        return new ResponseEntity<>(serveInfoFieldsList,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/v1/serves/{serveId}/{judge}", method = RequestMethod.PUT)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = Serve.class, message = "accept or reject one serve")
+            @ApiResponse(code = 200, response = ServeInfoFields.class, message = "accept or reject one serve")
     })
     public ResponseEntity<?> judgeServe(@PathVariable String serveId,@PathVariable String judge, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         if(!serveService.exists(serveId))
@@ -171,6 +184,7 @@ public class ServeController {
             serve.setStatus(Constants.SERVE_STATUS_REFUSED);
         serveService.save(serve);
 
-        return new ResponseEntity<>(serve, HttpStatus.OK);
+        ServeInfoFields serveInfoFields=serveInfoFieldsPopulator.populate(serve);
+        return new ResponseEntity<>(serveInfoFields, HttpStatus.OK);
     }
 }
