@@ -67,9 +67,10 @@ public class HouseController {
             @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Get house info")
     })
     public ResponseEntity<?> get(@PathVariable String id) throws Exception {
-        if(!houseService.exists(id))
+        //change:查看不到disable的house
+        House house = houseService.getActiveById(id);
+        if(house==null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
-        House house = houseService.getById(id);
         //change:无论公开私密都可以返回
         /*
         if ((!house.getPublicity()) && memberService.findTopByHouseAndUser(house, currentUser) == null) {
@@ -105,7 +106,8 @@ public class HouseController {
             @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Update house info")
     })
     public ResponseEntity<?> put(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser, @RequestBody UpdateHouseForm updateHouseForm) throws Exception {
-        House house = houseService.getById(id);
+        //change:查看不到disable的house
+        House house = houseService.getActiveById(id);
         if (house == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
@@ -129,7 +131,8 @@ public class HouseController {
             @ApiResponse(code = 200, response = HouseInfoFields.class, message = "delete the house")
     })
     public ResponseEntity<?> delete(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception {
-        House house = houseService.getById(id);
+        //change:查看不到disable的house
+        House house = houseService.getActiveById(id);
         if (house == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
