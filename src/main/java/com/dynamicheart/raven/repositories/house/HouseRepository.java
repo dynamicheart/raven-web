@@ -12,4 +12,8 @@ public interface HouseRepository extends MongoRepository<House, String> {
     List<House> findHousesByNameLike(String name);
 
     House findHouseByName(String name);
+
+    House findHouseByIdAndStatus(String id, int status);
+
+    List<House> findAllByStatus(int status);
 }

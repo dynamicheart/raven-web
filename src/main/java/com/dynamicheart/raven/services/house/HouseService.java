@@ -16,4 +16,8 @@ public interface HouseService extends RavenEntityService<String, House> {
     List<House> getBySimilarName(String name);
 
     House getByName(String name);
+
+    House getActiveById(String id);
+
+    List<House> getAllActive();
 }

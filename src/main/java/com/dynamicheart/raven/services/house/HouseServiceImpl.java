@@ -58,6 +58,16 @@ public class HouseServiceImpl extends RavenEntityServiceImpl<String, House>
     }
 
     @Override
+    public House getActiveById(String id) {
+        return houseRepository.findHouseByIdAndStatus(id,Constants.HOUSE_STATUS_NORMAL);
+    }
+
+    @Override
+    public List<House> getAllActive() {
+        return houseRepository.findAllByStatus(Constants.HOUSE_STATUS_NORMAL);
+    }
+
+    @Override
     public void delete(House house) throws ServiceException {
         houseRepository.delete(house);
         memberRepository.deleteByHouse(house);
