@@ -64,8 +64,9 @@ public class InRavenInfoFieldsPopulator {
         if(house != null){
             inRavenInfoFields.setHouse(houseRefFieldsPopulator.populate(house));
         }
-
-        User addresser = userService.getById(raven.getId());
+        
+        //bug fix addresserid instead of ravenid
+        User addresser = userService.getById(raven.getAddresserId());
         if(addresser != null){
             inRavenInfoFields.setAddresser(userRefFieldsPopulator.populate(addresser));
         }
