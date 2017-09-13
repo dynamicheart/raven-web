@@ -148,10 +148,13 @@ public class ServeController {
             @ApiResponse(code = 200, response = ServeInfoFields.class, responseContainer = "List", message = "Get available serve in one house")
     })
     public ResponseEntity<?> getByHouse(@PathVariable String houseId, @CurrentUser @ApiIgnore User currentUser) throws Exception{
-        if(!houseService.exists(houseId))
+        House house=houseService.getActiveById(houseId);
+        if(house==null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
 
-        House house=houseService.getById(houseId);
+        if(currentUser.getStatus().equals(Constants.USER_STATUS_DISABLE))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
+
         Member member=memberService.findTopByHouseAndUser(house,currentUser);
 
         if(member==null||!(member.getRole().equals(Constants.MEMBER_ROLE_LORD)))
