@@ -1,5 +1,6 @@
 package com.dynamicheart.raven.controller.admin.whistleblowing;
 
+import com.dynamicheart.raven.authorization.annotation.AdminAuthorization;
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
 import com.dynamicheart.raven.constant.Constants;
@@ -32,6 +33,7 @@ public class AdminWhistleBlowingController {
     private WhistleBlowingFormPopulator whistleBlowingFormPopulator;
 
     @RequestMapping(value="allWhistleBlowing", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = List.class, message = "query all complaints")
     })
@@ -43,6 +45,7 @@ public class AdminWhistleBlowingController {
     }
 
     @RequestMapping(value="closeWhistleBlowing/{complaintId}", method = RequestMethod.PUT)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = WhistleBlowingForm.class, message = "close a complaint")
     })

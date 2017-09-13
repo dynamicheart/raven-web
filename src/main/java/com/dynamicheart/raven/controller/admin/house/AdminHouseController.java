@@ -1,5 +1,6 @@
 package com.dynamicheart.raven.controller.admin.house;
 
+import com.dynamicheart.raven.authorization.annotation.AdminAuthorization;
 import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.controller.admin.house.field.HouseBriefInfo;
 import com.dynamicheart.raven.controller.admin.house.field.HouseDetailForm;
@@ -39,6 +40,7 @@ public class AdminHouseController {
     private HouseDetailFormPopulator houseDetailFormPopulator;
 
     @RequestMapping(value = "allHouseInfo", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = List.class, message = "query all house infos")
     })
@@ -50,6 +52,7 @@ public class AdminHouseController {
     }
 
     @RequestMapping(value = "searchInfoByName/{houseName}", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = UserBriefInfo.class, message = "query house info by name")
     })
@@ -61,6 +64,7 @@ public class AdminHouseController {
     }
 
     @RequestMapping(value = "searchDetailById/{id}", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseDetailForm.class, message = "query house detail by id")
     })
@@ -90,6 +94,7 @@ public class AdminHouseController {
 
 
     @RequestMapping(value = "deleteHouse/{id}", method = RequestMethod.DELETE)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = House.class, message = "delete house")
     })
@@ -105,6 +110,7 @@ public class AdminHouseController {
 
 
     @RequestMapping(value = "censorSigil/{id}", method = RequestMethod.PUT)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseDetailForm.class, message = "delete house avatar")
     })
@@ -122,6 +128,7 @@ public class AdminHouseController {
     }
 
     @RequestMapping(value = "setToPublic/{id}", method = RequestMethod.PUT)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseDetailForm.class, message = "set house to public")
     })
@@ -139,6 +146,7 @@ public class AdminHouseController {
     }
 
     @RequestMapping(value = "setToPrivate/{id}", method = RequestMethod.PUT)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseDetailForm.class, message = "set house to private")
     })
@@ -156,6 +164,7 @@ public class AdminHouseController {
     }
 
     @RequestMapping(value = "disableHouse/{id}", method = RequestMethod.PUT)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseDetailForm.class, message = "disable house")
     })
@@ -173,6 +182,7 @@ public class AdminHouseController {
     }
 
     @RequestMapping(value = "activateHouse/{id}", method = RequestMethod.PUT)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseDetailForm.class, message = "activate house")
     })

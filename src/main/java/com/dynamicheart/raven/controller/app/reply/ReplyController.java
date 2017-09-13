@@ -114,7 +114,7 @@ public class ReplyController {
         replyService.save(reply);
 
         ReplyInfoFields replyInfoFields = replyInfoFieldsPopulator.populate(reply);
-
-        return new ResponseEntity<>(replyInfoFields, HttpStatus.OK);
+        //bug fix:Http.Created,not OK
+        return new ResponseEntity<>(replyInfoFields, HttpStatus.CREATED);
     }
 }
