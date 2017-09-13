@@ -56,7 +56,9 @@ public class HouseController {
         List<HouseInfoFields> houseInfoFieldsList = new ArrayList<>();
 
         for (Member member : members) {
-            houseInfoFieldsList.add(houseInfoFieldsPopulator.populate(member.getHouse()));
+            House house=member.getHouse();
+            if(!house.getStatus().equals(Constants.HOUSE_STATUS_DISABLE))
+                houseInfoFieldsList.add(houseInfoFieldsPopulator.populate(house));
         }
 
         return new ResponseEntity<>(houseInfoFieldsList, HttpStatus.OK);
