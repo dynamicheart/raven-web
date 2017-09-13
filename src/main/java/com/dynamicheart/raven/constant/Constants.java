@@ -60,5 +60,6 @@ public class Constants {
     public static final String LEAN_CLOUD_RAVEN_APP_ID = "TFJOwzoaKwEFSMyIMIV4XPHY-gzGzoHsz";
     public static final String LEAN_CLOUD_RAVEN_APP_KEY = "InFOgxkqvOfz5Bl9YaXijdHd";
     public static final String LEAN_CLOUD_RAVEN_MASTER_KEY = "VpaIyTbOtE3qGvl8STU750ob";
+    public static final String LEAN_CLOUD_PUSH_ACTION = "com.dynamicheart.raven.push";
 }
 

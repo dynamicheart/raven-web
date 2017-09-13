@@ -45,8 +45,9 @@ public class RestTemplateLeanCloudService implements LeanCloudService {
         DBObject where = PushModel.genWhereQuery(installationIds);
 
         PushModelData data = new PushModelData();
-        data.setAlert(String.format(Message.MESSAGE_TEMPLATE_NEW_RAVEN, addresser.getId()));
-        data.setTitle(raven.getTitle());
+        data.setAlert(raven.getId());
+        data.setTitle(String.format(Message.MESSAGE_TEMPLATE_NEW_RAVEN, addresser.getId()));
+        data.setAction(Constants.LEAN_CLOUD_PUSH_ACTION);
 
         PushModel pushModel = new PushModel();
         pushModel.setPushModelData(data);
