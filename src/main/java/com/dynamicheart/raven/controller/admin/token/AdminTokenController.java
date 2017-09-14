@@ -43,7 +43,7 @@ public class AdminTokenController {
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
         Assert.notNull(username, Message.MESSAGE_USERNAME_NOT_EMPTY);
         Assert.notNull(password, Message.MESSAGE_PASSWORD_NOT_EMPTY);
-        User user = userRepository.findUserByUsername(username);
+        User user = userRepository.findTopByUsername(username);
         if (user == null || !encoder.matches(password, user.getPassword())) {
             return ResponseEntity.notFound().build();
         }

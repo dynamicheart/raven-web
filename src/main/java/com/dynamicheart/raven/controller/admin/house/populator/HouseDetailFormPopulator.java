@@ -28,7 +28,8 @@ public class HouseDetailFormPopulator extends AbstractDataPopulator<House, House
         houseDetailForm.setSigil(house.getSigil());
         houseDetailForm.setStatus(house.getStatus());
         houseDetailForm.setTags(house.getTags());
-        houseDetailForm.setMemberNumbers(houseDetailForm.getMemberNumbers());
+        //bug fix 读自己写自己……我有毒
+        houseDetailForm.setMemberNumbers(house.getMemberNumbers());
         SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
         houseDetailForm.setCreatedDateString(sdf.format(house.getCreatedDate()));
         houseDetailForm.setUpdatedDateString(sdf.format(house.getLastModifiedDate()));

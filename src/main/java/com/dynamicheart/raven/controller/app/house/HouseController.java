@@ -45,41 +45,41 @@ public class HouseController {
     @Inject
     private UpdateHouseFormPopulator updateHouseFormPopulator;
 
-    @RequestMapping(value = "/api/v1/users/{userId}/houses", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/user/houses", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseInfoFields.class, responseContainer = "List", message = "Get all inravens")
     })
-    public ResponseEntity<?> getAll(@PathVariable String userId, @CurrentUser @ApiIgnore User currentUser) throws Exception {
-        if (!userId.equals(currentUser.getId())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
-
+    public ResponseEntity<?> getAll(@CurrentUser @ApiIgnore User currentUser) throws Exception {
         List<Member> members = memberService.findByUser(currentUser);
 
         List<HouseInfoFields> houseInfoFieldsList = new ArrayList<>();
 
         for (Member member : members) {
-            houseInfoFieldsList.add(houseInfoFieldsPopulator.populate(member.getHouse()));
+            House house=member.getHouse();
+            if(!house.getStatus().equals(Constants.HOUSE_STATUS_DISABLE))
+                houseInfoFieldsList.add(houseInfoFieldsPopulator.populate(house));
         }
 
         return new ResponseEntity<>(houseInfoFieldsList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/v1/houses/{id}", method = RequestMethod.GET)
-    @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Get house info")
     })
-    public ResponseEntity<?> get(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception {
-        House house = houseService.getById(id);
-        if (house == null) {
+    public ResponseEntity<?> get(@PathVariable String id) throws Exception {
+        //change:查看不到disable的house
+        House house = houseService.getActiveById(id);
+        if(house==null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
-        }
+        //change:无论公开私密都可以返回
+        /*
+        if ((!house.getPublicity()) && memberService.findTopByHouseAndUser(house, currentUser) == null) {
 
-        if (!house.getPublicity() || memberService.findTopByHouseAndUser(house, currentUser) == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
+        */
 
         HouseInfoFields houseInfoFields = houseInfoFieldsPopulator.populate(house);
         return new ResponseEntity<>(houseInfoFields, HttpStatus.OK);
@@ -94,6 +94,9 @@ public class HouseController {
         House house = createHouseFormPopulator.populate(createHouseForm);
         house = houseService.create(house, currentUser);
 
+        //bug fix:change house member count
+        house.setMemberNumbers(1);
+        houseService.save(house);
         HouseInfoFields houseInfoFields = houseInfoFieldsPopulator.populate(house);
 
         return new ResponseEntity<>(houseInfoFields, HttpStatus.CREATED);
@@ -105,7 +108,8 @@ public class HouseController {
             @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Update house info")
     })
     public ResponseEntity<?> put(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser, @RequestBody UpdateHouseForm updateHouseForm) throws Exception {
-        House house = houseService.getById(id);
+        //change:查看不到disable的house
+        House house = houseService.getActiveById(id);
         if (house == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }
@@ -126,10 +130,11 @@ public class HouseController {
     @RequestMapping(value = "/api/v1/houses/{id}", method = RequestMethod.DELETE)
     @Authorization
     @ApiResponses({
-            @ApiResponse(code = 200, response = HouseInfoFields.class, message = "Update the house")
+            @ApiResponse(code = 200, response = HouseInfoFields.class, message = "delete the house")
     })
     public ResponseEntity<?> delete(@PathVariable String id, @CurrentUser @ApiIgnore User currentUser) throws Exception {
-        House house = houseService.getById(id);
+        //change:查看不到disable的house
+        House house = houseService.getActiveById(id);
         if (house == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }

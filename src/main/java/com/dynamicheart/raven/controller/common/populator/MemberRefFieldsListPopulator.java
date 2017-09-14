@@ -30,6 +30,7 @@ public class MemberRefFieldsListPopulator extends AbstractDataPopulator<List<Mem
                         memberRefFieldsList.add(memberRefFields);
                     }
                 });
-        return null;
+        //bug fix
+        return memberRefFieldsList;
     }
 }

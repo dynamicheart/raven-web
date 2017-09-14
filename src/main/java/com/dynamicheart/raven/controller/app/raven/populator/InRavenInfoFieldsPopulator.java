@@ -65,7 +65,8 @@ public class InRavenInfoFieldsPopulator {
             inRavenInfoFields.setHouse(houseRefFieldsPopulator.populate(house));
         }
 
-        User addresser = userService.getById(raven.getId());
+        //bug fix addresserid instead of ravenid
+        User addresser = userService.getById(raven.getAddresserId());
         if(addresser != null){
             inRavenInfoFields.setAddresser(userRefFieldsPopulator.populate(addresser));
         }
@@ -75,10 +76,13 @@ public class InRavenInfoFieldsPopulator {
             inRavenInfoFields.setReplyRefFields(replyRefFieldsPopulator.populate(reply));
         }
 
-        Mold mold = moldService.getById(raven.getMoldId());
-        if(raven.isMold() && mold != null){
-            inRavenInfoFields.setMold(true);
-            inRavenInfoFields.setMoldContent(mold.getContent());
+        //bug fix: raven mold id can be null
+        if(raven.getMoldId()!=null) {
+            Mold mold = moldService.getById(raven.getMoldId());
+            if (raven.isMold() && mold != null) {
+                inRavenInfoFields.setMold(true);
+                inRavenInfoFields.setMoldContent(mold.getContent());
+            }
         }
 
         return inRavenInfoFields;

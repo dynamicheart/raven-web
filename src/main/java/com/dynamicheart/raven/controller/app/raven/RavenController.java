@@ -17,6 +17,7 @@ import com.dynamicheart.raven.leancloud.service.LeanCloudService;
 import com.dynamicheart.raven.services.house.HouseService;
 import com.dynamicheart.raven.services.member.MemberService;
 import com.dynamicheart.raven.services.raven.RavenService;
+import com.dynamicheart.raven.utils.exception.ServiceException;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
@@ -49,17 +50,13 @@ public class RavenController {
     @Inject
     private LeanCloudService leanCloudService;
 
-    @RequestMapping(value = "/api/v1/users/{userId}/ravens", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/user/ravens", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = RavenInfoFields.class,  responseContainer = "List", message = "Get all ravens")
     })
-    public ResponseEntity<?> getAll(@PathVariable String userId, @CurrentUser @ApiIgnore User currentUser)throws Exception{
-        if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
-
-        List<Raven> ravens = ravenService.findByAddresserId(userId);
+    public ResponseEntity<?> getAll(@CurrentUser @ApiIgnore User currentUser)throws Exception{
+        List<Raven> ravens = ravenService.findByAddresserId(currentUser.getId());
 
         List<RavenInfoFields> ravenInfoFieldsList = new ArrayList<>();
         for(Raven raven: ravens){
@@ -94,7 +91,8 @@ public class RavenController {
     @ApiResponses({
             @ApiResponse(code = 200, response = RavenInfoFields.class, message = "Create a new raven")
     })
-    public ResponseEntity<?> post(@RequestParam CreateRavenForm createRavenForm, @CurrentUser @ApiIgnore User currentUser) throws Exception{
+    //changes:requestparam or requestbody
+    public ResponseEntity<?> post(@RequestBody CreateRavenForm createRavenForm, @CurrentUser @ApiIgnore User currentUser) throws Exception{
         Raven raven = createRavenFormPopulator.populate(createRavenForm);
         House house = houseService.getById(raven.getHouseId());
         Member member = memberService.findTopByHouseAndUser(house, currentUser);
@@ -102,8 +100,14 @@ public class RavenController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
         }
 
-        leanCloudService.send(raven, currentUser);
         raven = ravenService.save(raven);
+        //feature:检测通知发送情况
+        try {
+            leanCloudService.send(raven, currentUser);
+        }catch(ServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_LEANCLOUD_ERROR));
+        }
+
         RavenInfoFields ravenInfoFields = ravenInfoFieldsPopulator.populate(raven);
 
         return new ResponseEntity<>(ravenInfoFields, HttpStatus.CREATED);

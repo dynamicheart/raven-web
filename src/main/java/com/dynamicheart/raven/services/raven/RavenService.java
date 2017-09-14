@@ -11,8 +11,6 @@ public interface RavenService extends RavenEntityService<String, Raven> {
 
     List<Raven> findByAddresseeId(String addresseeId);
 
-    List<Raven> findByAddresseeIdAndCreatedDateAfter(String addresseeId, Date date);
-
     List<Raven> findBySimilarContent(String content);
 
     List<Raven> findByHouseId(String houseId);

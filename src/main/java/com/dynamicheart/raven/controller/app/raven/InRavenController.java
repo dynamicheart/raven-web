@@ -30,24 +30,13 @@ public class InRavenController {
     @Inject
     private InRavenInfoFieldsPopulator inRavenInfoFieldsPopulator;
 
-    @RequestMapping(value = "/api/v1/users/{userId}/inravens", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/user/inravens", method = RequestMethod.GET)
     @Authorization
     @ApiResponses({
             @ApiResponse(code = 200, response = InRavenInfoFields.class,  responseContainer = "List", message = "Get all inravens")
     })
-    public ResponseEntity<?> getAll(@PathVariable String userId,
-                                    @RequestParam(required = false) Date dateAfter,
-                                    @CurrentUser @ApiIgnore User currentUser) throws Exception {
-        if (!currentUser.getId().equals(userId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_FORBIDDEN));
-        }
-
-        List<Raven> ravens;
-        if (dateAfter == null) {
-            ravens = ravenService.findByAddresseeId(userId);
-        } else {
-            ravens = ravenService.findByAddresseeIdAndCreatedDateAfter(userId, dateAfter);
-        }
+    public ResponseEntity<?> getAll(@CurrentUser @ApiIgnore User currentUser) throws Exception {
+        List<Raven> ravens = ravenService.findByAddresseeId(currentUser.getId());
 
         List<InRavenInfoFields> inRavenInfoFieldsList = new ArrayList<>();
         for(Raven raven: ravens){
@@ -62,8 +51,9 @@ public class InRavenController {
     @ApiResponses({
             @ApiResponse(code = 200, response = InRavenInfoFields.class, message = "Get one inraven")
     })
+    //change in hope of something will be different
     public ResponseEntity<?> get(@PathVariable String ravenId, @CurrentUser @ApiIgnore User currentUser) throws Exception {
-        Raven raven = ravenService.getById(ravenId);
+        Raven raven = ravenService.findById(ravenId);
         if(raven == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GenericResponseBody(Message.MESSAGE_NOT_FOUND));
         }

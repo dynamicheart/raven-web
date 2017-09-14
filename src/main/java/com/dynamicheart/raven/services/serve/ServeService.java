@@ -9,4 +9,8 @@ public interface ServeService extends RavenEntityService<String, Serve>{
     List<Serve> getAll();
 
     List<Serve> getAllHandlingToPublic();
+
+    List<Serve> getAllByManId(String manId);
+
+    List<Serve> getAllHandingOrdinaryByHouseId(String houseId);
 }

@@ -33,35 +33,35 @@ public class RestTemplateLeanCloudService implements LeanCloudService {
     private static HttpHeaders httpHeaders;
 
     @Override
-    public void send(Raven raven, User addresser) throws ServiceException {
+    public void send(Raven raven, User addresser) throws RestClientException {
 
         List<String> installationIds = new ArrayList<>();
         raven.getAddresseeIds().forEach(addresseeId -> {
             InstallationModel installationModel = installationManager.get(addresseeId);
-            if(installationModel != null){
+            if (installationModel != null) {
                 installationIds.add(installationModel.getInstallationId());
             }
         });
         DBObject where = PushModel.genWhereQuery(installationIds);
 
         PushModelData data = new PushModelData();
-        data.setAlert(String.format(Message.MESSAGE_TEMPLATE_NEW_RAVEN, addresser.getId()));
+        data.setAlert(addresser.getUsername());
         data.setTitle(raven.getTitle());
+        data.setRavenId(raven.getId());
+        data.setAction(Constants.LEAN_CLOUD_PUSH_ACTION);
 
         PushModel pushModel = new PushModel();
         pushModel.setPushModelData(data);
         pushModel.setWhere(where);
 
         HttpEntity<PushModel> entity = new HttpEntity<>(pushModel, getHttpHeaders());
-        try {
-            ResponseEntity<byte[]> responseEntity = restTemplate.exchange(
-                    String.format(Constants.LEAN_CLOUD_API_BASE_URL, "/push"),
-                    HttpMethod.POST,
-                    entity,
-                    byte[].class);
-        } catch (RestClientException e) {
-            throw new ServiceException();
-        }
+
+        ResponseEntity<byte[]> responseEntity = restTemplate.exchange(
+                String.format(Constants.LEAN_CLOUD_API_BASE_URL, "/push"),
+                HttpMethod.POST,
+                entity,
+                byte[].class);
+
     }
 
     private static HttpHeaders getHttpHeaders() {

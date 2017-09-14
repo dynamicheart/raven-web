@@ -2,12 +2,15 @@ package com.dynamicheart.raven.controller.app.user;
 
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.authorization.annotation.CurrentUser;
+import com.dynamicheart.raven.constant.Message;
 import com.dynamicheart.raven.controller.app.user.field.CreateUserForm;
+import com.dynamicheart.raven.controller.app.user.field.UpdateInstallationForm;
 import com.dynamicheart.raven.controller.app.user.field.UpdateUserForm;
 import com.dynamicheart.raven.controller.app.user.field.UserInfoFields;
 import com.dynamicheart.raven.controller.app.user.populator.CreateUserFormPopulator;
 import com.dynamicheart.raven.controller.app.user.populator.UpdateUserFormPopulator;
 import com.dynamicheart.raven.controller.app.user.populator.UserInfoFieldsPopulator;
+import com.dynamicheart.raven.controller.common.model.GenericResponseBody;
 import com.dynamicheart.raven.leancloud.manager.InstallationManager;
 import com.dynamicheart.raven.leancloud.model.installation.InstallationModel;
 import com.dynamicheart.raven.model.user.User;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 
 @RestController
 public class UserController {
@@ -53,11 +57,17 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, response = UserInfoFields.class, message = "Create a user")
     })
-    public ResponseEntity<?> post(@RequestBody CreateUserForm createUserForm) throws Exception{
+    public ResponseEntity<?> post(@RequestBody @Valid CreateUserForm createUserForm) throws Exception{
 
         User user = createUserFormPopulator.populate(createUserForm);
 
-        //TODO check duplicate
+        //check duplicate
+        if(userService.getByName(user.getUsername())!=null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_USERNAME_DUPLICATE));
+        if(userService.getByEmail(user.getEmail())!=null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_EMAIL_DUPLICATE));
+        if(userService.getByPhoneNumber(user.getPhoneNumber())!=null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new GenericResponseBody(Message.MESSAGE_PHONE_NUM_DUPLICATE));
 
         user = userService.create(user);
 
@@ -98,10 +108,10 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, response = InstallationModel.class, message = "Update installation id")
     })
-    public ResponseEntity<?> postInstallationId(@RequestParam String installationId,
+    public ResponseEntity<?> postInstallationId(@RequestBody UpdateInstallationForm updateInstallationForm,
                                                 @CurrentUser @ApiIgnore User currentUser) throws Exception{
 
-        InstallationModel installation = installationManager.save(currentUser.getId(), installationId);
+        InstallationModel installation = installationManager.save(currentUser.getId(), updateInstallationForm.getInstallationId());
         return new ResponseEntity<>(installation, HttpStatus.OK);
     }
 }

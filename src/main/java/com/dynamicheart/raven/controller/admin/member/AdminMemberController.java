@@ -1,5 +1,6 @@
 package com.dynamicheart.raven.controller.admin.member;
 
+import com.dynamicheart.raven.authorization.annotation.AdminAuthorization;
 import com.dynamicheart.raven.controller.admin.member.populator.MemberBriefInfoPopulator;
 import com.dynamicheart.raven.controller.app.member.field.MemberInfoFields;
 import com.dynamicheart.raven.model.house.House;
@@ -31,6 +32,7 @@ public class AdminMemberController {
     private MemberBriefInfoPopulator memberBriefInfoPopulator;
 
     @RequestMapping(value = "/allMemberInfo", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = MemberInfoFields.class, message = "Get member info")
     })

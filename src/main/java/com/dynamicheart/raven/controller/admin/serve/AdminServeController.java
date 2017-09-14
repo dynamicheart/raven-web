@@ -1,6 +1,7 @@
 package com.dynamicheart.raven.controller.admin.serve;
 
 
+import com.dynamicheart.raven.authorization.annotation.AdminAuthorization;
 import com.dynamicheart.raven.authorization.annotation.Authorization;
 import com.dynamicheart.raven.constant.Constants;
 import com.dynamicheart.raven.controller.admin.serve.field.ServeForm;
@@ -52,6 +53,7 @@ public class AdminServeController {
     private ServeFormPopulator serveFormPopulator;
 
     @RequestMapping(value="allServes", method = RequestMethod.GET)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = List.class, message = "query all applications")
     })
@@ -64,6 +66,7 @@ public class AdminServeController {
 
 
     @RequestMapping(value="judgeServe/{serveId}/{judge}", method = RequestMethod.PUT)
+    @AdminAuthorization
     @ApiResponses({
             @ApiResponse(code = 200, response = ServeForm.class, message = "judge an application: 1 for approval, 0 for rejection")
     })
@@ -72,7 +75,7 @@ public class AdminServeController {
             return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
 
         Serve serve=serveService.getById(serveId);
-        if(serve.getType()!=Constants.SERVE_TYPE_ORDINARY)
+        if(serve.getType()!=Constants.SERVE_TYPE_PUBLIC||serve.getStatus()!=Constants.SERVE_STATUS_HANDLING)
             return new ResponseEntity<>(null,HttpStatus.FORBIDDEN);
 
         if(judge.equals("1")) {

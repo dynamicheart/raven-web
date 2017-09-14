@@ -4,6 +4,7 @@ import com.dynamicheart.raven.model.house.House;
 import com.dynamicheart.raven.model.member.Member;
 import com.dynamicheart.raven.model.user.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
@@ -14,7 +15,8 @@ public interface MemberRepository extends MongoRepository<Member, String> {
     List<Member> findByHouse(House house);
 
     @RestResource(exported = false)
-    List<Member> findByUser(User user);
+    @Query("{'user_id' : ?0 }")
+    List<Member> findByUserId(String userId);
 
     @RestResource(exported = false)
     Member findTopByHouseAndUser(House house, User user);

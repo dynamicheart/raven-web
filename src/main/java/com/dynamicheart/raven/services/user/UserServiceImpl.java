@@ -53,6 +53,16 @@ public class UserServiceImpl extends RavenEntityServiceImpl<String, User>
 
     @Override
     public User getByName(String username) {
-        return userRepository.findUserByUsername(username);
+        return userRepository.findTopByUsername(username);
+    }
+
+    @Override
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User getByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber);
     }
 }

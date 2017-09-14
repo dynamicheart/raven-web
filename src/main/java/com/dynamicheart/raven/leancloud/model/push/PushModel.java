@@ -20,7 +20,7 @@ public class PushModel implements Serializable{
     @JsonProperty("where")
     private DBObject where;
 
-    @JsonProperty("pushModelData")
+    @JsonProperty("data")
     private PushModelData pushModelData;
 
     public DBObject getWhere() {
