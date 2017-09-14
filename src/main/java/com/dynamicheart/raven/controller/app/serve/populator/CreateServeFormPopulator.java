@@ -38,11 +38,6 @@ public class CreateServeFormPopulator extends AbstractDataPopulator<CreateServeF
     public Serve populate(CreateServeForm createServeForm, Serve serve) throws ConversionException {
         List<Integer> types= Arrays.asList(Constants.SERVE_TYPE_ORDINARY,Constants.SERVE_TYPE_MAESTER,Constants.SERVE_TYPE_LORD,Constants.SERVE_TYPE_PUBLIC);
 
-        if(!userService.exists(createServeForm.getManId())||
-                !houseService.exists(createServeForm.getHouseId())||
-                !types.contains(createServeForm.getType()))
-            throw new ConversionException();
-
         serve.setManId(createServeForm.getManId());
         serve.setHouseId(createServeForm.getHouseId());
         serve.setContent(createServeForm.getContent());
